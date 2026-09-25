@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently -k -n \"API,WEB\" -c \"cyan,magenta\" \"node server/server.js\" \"next dev\"",
+    "dev:backend": "node server/server.js",
+    "dev:frontend": "next dev",
     "build": "next build",
     "start": "next start",
+    "start:backend": "node server/server.js",
+    "seed": "node server/scripts/seed.js",
     "lint": "eslint"
   },
   "dependencies": {
