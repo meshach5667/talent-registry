@@ -71,7 +71,7 @@ export default function OrganizationsPage() {
         </div>
 
         {/* Filter Controls */}
-        <div className="bg-white p-4 rounded-xl border border-neutral-200 shadow-xs flex flex-col sm:flex-row gap-3">
+        <div className="bg-white p-4 rounded-2xl border border-neutral-200/90 shadow-xs flex flex-col sm:flex-row gap-3">
           <form onSubmit={handleSearch} className="flex-1 flex gap-2">
             <div className="flex-1 relative">
               <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
@@ -80,7 +80,7 @@ export default function OrganizationsPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search organizations by name..."
-                className="w-full text-xs pl-9 pr-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-1 focus:ring-neutral-900"
+                className="w-full text-xs pl-9 pr-3 py-2.5 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-900"
               />
             </div>
             <Button type="submit" size="sm">
@@ -91,7 +91,7 @@ export default function OrganizationsPage() {
           <select
             value={selectedCountry}
             onChange={(e) => setSelectedCountry(e.target.value)}
-            className="text-xs px-3 py-2 border border-neutral-300 rounded-md bg-white font-medium text-neutral-800 outline-none"
+            className="text-xs px-3 py-2 border border-neutral-300 rounded-lg bg-white font-medium text-neutral-800 outline-none cursor-pointer"
           >
             {countries.map((c) => (
               <option key={c} value={c}>
@@ -107,7 +107,7 @@ export default function OrganizationsPage() {
             Loading verified organizations...
           </div>
         ) : organizations.length === 0 ? (
-          <div className="py-16 text-center bg-white rounded-xl border border-neutral-200 p-8 space-y-2">
+          <div className="py-16 text-center bg-white rounded-2xl border border-neutral-200 p-8 space-y-2">
             <Building2 className="w-10 h-10 text-neutral-400 mx-auto" />
             <h3 className="font-bold text-neutral-900 text-sm">No organizations found</h3>
             <p className="text-xs text-neutral-500">Try changing your search keywords or filter.</p>
@@ -117,12 +117,12 @@ export default function OrganizationsPage() {
             {organizations.map((org) => (
               <div
                 key={org._id}
-                className="bg-white rounded-xl border border-neutral-200 p-5 hover:border-neutral-400 hover:shadow-xs transition-all flex flex-col justify-between"
+                className="bg-white rounded-2xl border border-neutral-200/90 p-5 hover:border-emerald-500/40 card-hover-lift flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center font-bold text-neutral-800 text-sm overflow-hidden">
+                      <div className="w-12 h-12 rounded-xl bg-neutral-100 border border-neutral-200 flex items-center justify-center font-bold text-neutral-800 text-sm overflow-hidden">
                         {org.logo ? (
                           <img
                             src={org.logo}

@@ -143,7 +143,7 @@ export default function OrganizationDashboardPage() {
     <div className="flex-1 bg-neutral-50/50 py-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Organization Header */}
-        <div className="bg-white rounded-xl border border-neutral-200 p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row items-start justify-between gap-6">
+        <div className="bg-white rounded-2xl border border-neutral-200/90 p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row items-start justify-between gap-6">
           <div className="flex items-start gap-5">
             <div className="relative group">
               <div className="w-20 h-20 rounded-xl bg-neutral-100 border border-neutral-200 flex items-center justify-center font-bold text-neutral-800 text-xl overflow-hidden shrink-0">

@@ -464,7 +464,7 @@ export default function DashboardPage() {
     <div className="flex-1 bg-neutral-50/50 py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Profile Card & Photo Uploader Header */}
-        <div className="bg-white rounded-xl border border-neutral-200 p-6 sm:p-8 shadow-xs">
+        <div className="bg-white rounded-2xl border border-neutral-200/90 p-6 sm:p-8 shadow-xs">
           <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
               {/* Photo Container with Live Upload/Replace/Delete */}
@@ -514,6 +514,20 @@ export default function DashboardPage() {
                     {user.name}
                   </h1>
                   <VerifiedBadge label="Verified Profile" />
+                  {user.githubUsername && (
+                    <a
+                      href={`https://github.com/${user.githubUsername}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-neutral-900 text-white hover:bg-neutral-800 transition-colors shadow-2xs"
+                      title="Connected GitHub Profile"
+                    >
+                      <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                        <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                      </svg>
+                      <span>@{user.githubUsername}</span>
+                    </a>
+                  )}
                 </div>
                 <p className="text-xs sm:text-sm text-neutral-600 font-medium">
                   {profile?.headline || "Professional on Talent Registry"}
@@ -533,7 +547,7 @@ export default function DashboardPage() {
             {/* Passport Link & Share */}
             <div className="flex flex-col sm:items-end gap-2 w-full sm:w-auto">
               <Link href={`/passport/${profile?.passportSlug || user.id}`}>
-                <Button size="sm" className="w-full sm:w-auto bg-neutral-900 text-white">
+                <Button size="sm" className="w-full sm:w-auto">
                   <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
                   <span>View Public Passport</span>
                 </Button>
@@ -541,12 +555,12 @@ export default function DashboardPage() {
 
               <button
                 onClick={copyPassportUrl}
-                className="text-xs text-neutral-500 hover:text-neutral-800 flex items-center gap-1 self-start sm:self-end"
+                className="text-xs text-neutral-500 hover:text-neutral-800 flex items-center gap-1 self-start sm:self-end cursor-pointer"
               >
                 {copiedLink ? (
                   <>
                     <Check className="w-3.5 h-3.5 text-emerald-600" />
-                    <span className="text-emerald-700 font-medium">URL Copied!</span>
+                    <span className="text-emerald-700 font-semibold">URL Copied!</span>
                   </>
                 ) : (
                   <>
@@ -560,7 +574,7 @@ export default function DashboardPage() {
 
           {/* Reputation Index Strip */}
           <div className="mt-6 pt-6 border-t border-neutral-100 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-            <div className="bg-neutral-50 p-3 rounded-lg border border-neutral-200">
+            <div className="bg-neutral-50/70 p-3.5 rounded-xl border border-neutral-200/80 shadow-2xs">
               <span className="text-[11px] text-neutral-500 font-mono">Reputation Score</span>
               <div className="text-xl font-extrabold text-neutral-900 mt-0.5">
                 {rep.score || 40}
@@ -568,21 +582,21 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-neutral-50 p-3 rounded-lg border border-neutral-200">
+            <div className="bg-neutral-50/70 p-3.5 rounded-xl border border-neutral-200/80 shadow-2xs">
               <span className="text-[11px] text-neutral-500 font-mono">Tier</span>
               <div className="text-sm font-bold text-emerald-800 mt-1 uppercase">
                 {rep.tier || "Emerging"}
               </div>
             </div>
 
-            <div className="bg-neutral-50 p-3 rounded-lg border border-neutral-200">
+            <div className="bg-neutral-50/70 p-3.5 rounded-xl border border-neutral-200/80 shadow-2xs">
               <span className="text-[11px] text-neutral-500 font-mono">Verified Roles</span>
               <div className="text-xl font-extrabold text-neutral-900 mt-0.5">
                 {rep.verifiedExperienceCount || 0}
               </div>
             </div>
 
-            <div className="bg-neutral-50 p-3 rounded-lg border border-neutral-200">
+            <div className="bg-neutral-50/70 p-3.5 rounded-xl border border-neutral-200/80 shadow-2xs">
               <span className="text-[11px] text-neutral-500 font-mono">Reliability Rating</span>
               <div className="text-xl font-extrabold text-emerald-700 mt-0.5">
                 {rep.reliabilityIndex || 75}%
@@ -592,13 +606,13 @@ export default function DashboardPage() {
         </div>
 
         {/* Dashboard Navigation Tabs */}
-        <div className="flex border-b border-neutral-200 space-x-1 sm:space-x-4 text-xs font-semibold overflow-x-auto">
+        <div className="flex bg-white p-1.5 rounded-xl border border-neutral-200/90 shadow-2xs gap-1.5 text-xs font-semibold overflow-x-auto">
           <button
             onClick={() => setActiveTab("experiences")}
-            className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`py-2 px-3.5 rounded-lg flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "experiences"
-                ? "border-neutral-900 text-neutral-950"
-                : "border-transparent text-neutral-500 hover:text-neutral-900"
+                ? "bg-neutral-900 text-white shadow-xs"
+                : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-50"
             }`}
           >
             <Briefcase className="w-4 h-4" />
@@ -607,10 +621,10 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab("projects")}
-            className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`py-2 px-3.5 rounded-lg flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "projects"
-                ? "border-neutral-900 text-neutral-950"
-                : "border-transparent text-neutral-500 hover:text-neutral-900"
+                ? "bg-neutral-900 text-white shadow-xs"
+                : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-50"
             }`}
           >
             <FolderGit2 className="w-4 h-4" />
@@ -619,10 +633,10 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab("inquiries")}
-            className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`py-2 px-3.5 rounded-lg flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "inquiries"
-                ? "border-neutral-900 text-neutral-950"
-                : "border-transparent text-neutral-500 hover:text-neutral-900"
+                ? "bg-neutral-900 text-white shadow-xs"
+                : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-50"
             }`}
           >
             <Mail className="w-4 h-4" />
@@ -631,10 +645,10 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab("verifications")}
-            className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`py-2 px-3.5 rounded-lg flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "verifications"
-                ? "border-neutral-900 text-neutral-950"
-                : "border-transparent text-neutral-500 hover:text-neutral-900"
+                ? "bg-neutral-900 text-white shadow-xs"
+                : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-50"
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
@@ -643,10 +657,10 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab("settings")}
-            className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`py-2 px-3.5 rounded-lg flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "settings"
-                ? "border-neutral-900 text-neutral-950"
-                : "border-transparent text-neutral-500 hover:text-neutral-900"
+                ? "bg-neutral-900 text-white shadow-xs"
+                : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-50"
             }`}
           >
             <Edit2 className="w-4 h-4" />

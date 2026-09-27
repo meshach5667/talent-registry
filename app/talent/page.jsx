@@ -7,7 +7,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Badge, VerifiedBadge } from "@/components/ui/badge";
+import { Badge, VerifiedBadge, TrustScoreBadge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
 import {
   Search,
@@ -408,17 +408,7 @@ function TalentSearchContent() {
                         </div>
                       </div>
 
-                      <div className="text-right">
-                        <div className="text-[10px] text-neutral-400 font-mono">
-                          Trust Score
-                        </div>
-                        <div className="text-base font-bold text-neutral-900">
-                          {rep.score || 50}
-                          <span className="text-[10px] text-neutral-400 font-normal">
-                            /100
-                          </span>
-                        </div>
-                      </div>
+                      <TrustScoreBadge score={rep.score || 50} />
                     </div>
 
                     {/* Headline */}
@@ -434,20 +424,26 @@ function TalentSearchContent() {
                           className="py-0.5 text-[10px]"
                         />
                       ) : (
-                        <span className="px-2 py-0.5 rounded text-[10px] bg-neutral-100 text-neutral-600 border border-neutral-200">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] bg-neutral-100 text-neutral-600 border border-neutral-200">
                           Self-Reported
                         </span>
                       )}
 
+                      {u.githubUsername && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-neutral-800 bg-neutral-100 px-2 py-0.5 rounded-full border border-neutral-200 font-mono">
+                          @{u.githubUsername}
+                        </span>
+                      )}
+
                       {rep.averageRating > 0 && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-neutral-800 bg-neutral-100 px-2 py-0.5 rounded border border-neutral-200">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-neutral-800 bg-neutral-100 px-2 py-0.5 rounded-full border border-neutral-200">
                           <Star className="w-2.5 h-2.5 text-amber-500 fill-amber-500" />
                           {rep.averageRating} ({rep.feedbackCount || 1})
                         </span>
                       )}
 
                       {item.availability?.status === "available" && (
-                        <span className="text-[10px] font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                           Available Now
                         </span>
                       )}

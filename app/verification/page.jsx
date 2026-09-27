@@ -35,7 +35,7 @@ export default function VerificationCenterPage() {
         </div>
 
         {/* Token Lookup Box */}
-        <div className="bg-white p-6 sm:p-8 rounded-xl border border-neutral-200 shadow-xs max-w-xl mx-auto">
+        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-neutral-200/90 shadow-lg shadow-neutral-900/5 max-w-xl mx-auto">
           <h2 className="text-sm font-bold text-neutral-900 mb-1 flex items-center gap-1.5">
             <KeyRound className="w-4 h-4 text-emerald-600" />
             <span>Have a Verification Request Token?</span>
@@ -51,7 +51,7 @@ export default function VerificationCenterPage() {
               value={tokenInput}
               onChange={(e) => setTokenInput(e.target.value)}
               placeholder="e.g. demo-verify-token-amina-paystack"
-              className="flex-1 text-xs px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-1 focus:ring-neutral-900 font-mono"
+              className="flex-1 text-xs px-3.5 py-2.5 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono transition-all"
             />
             <Button type="submit" size="md">
               Audit Claim
@@ -63,7 +63,7 @@ export default function VerificationCenterPage() {
             <button
               type="button"
               onClick={() => setTokenInput("demo-verify-token-amina-paystack")}
-              className="text-emerald-700 underline font-mono"
+              className="text-emerald-700 font-semibold underline font-mono cursor-pointer"
             >
               demo-verify-token-amina-paystack
             </button>
@@ -72,7 +72,7 @@ export default function VerificationCenterPage() {
 
         {/* 3 Step Protocol Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-5 rounded-xl border border-neutral-200">
+          <div className="bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-xs card-hover-lift">
             <div className="text-xs font-mono font-bold text-neutral-400 mb-2">01. INITIATION</div>
             <h3 className="text-sm font-bold text-neutral-900 mb-1">Professional Claim</h3>
             <p className="text-xs text-neutral-600 leading-relaxed">
@@ -80,7 +80,7 @@ export default function VerificationCenterPage() {
             </p>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-emerald-200 ring-1 ring-emerald-500/20">
+          <div className="bg-white p-6 rounded-2xl border-2 border-emerald-300 ring-4 ring-emerald-500/10 shadow-xs card-hover-lift">
             <div className="text-xs font-mono font-bold text-emerald-700 mb-2">02. AUDIT</div>
             <h3 className="text-sm font-bold text-neutral-900 mb-1">Employer Review</h3>
             <p className="text-xs text-neutral-600 leading-relaxed">
@@ -88,7 +88,7 @@ export default function VerificationCenterPage() {
             </p>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-neutral-200">
+          <div className="bg-white p-6 rounded-2xl border border-neutral-200/80 shadow-xs card-hover-lift">
             <div className="text-xs font-mono font-bold text-neutral-400 mb-2">03. IMMUTABILITY</div>
             <h3 className="text-sm font-bold text-neutral-900 mb-1">Verified Badge</h3>
             <p className="text-xs text-neutral-600 leading-relaxed">

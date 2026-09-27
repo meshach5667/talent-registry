@@ -42,6 +42,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/verification" className="hover:text-white transition-colors">
+                  Verification Protocol Center
+                </Link>
+              </li>
+              <li>
                 <Link href="/passport/kwame-mensah" className="hover:text-white transition-colors">
                   Sample Professional Passport
                 </Link>
@@ -98,9 +103,12 @@ export function Footer() {
           <div>
             © {new Date().getFullYear()} Talent Registry Africa. All rights reserved.
           </div>
-          <div className="flex gap-6 mt-3 sm:mt-0">
+          <div className="flex flex-wrap gap-4 sm:gap-6 mt-3 sm:mt-0 items-center">
             <span>Built for the continent</span>
-            <span>Security First</span>
+            <span className="flex items-center gap-1 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+              <span>PWA Ready & Offline Capable</span>
+            </span>
             <span>Audited & Verified</span>
           </div>
         </div>

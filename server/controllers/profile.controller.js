@@ -21,7 +21,7 @@ exports.getPublicPassport = async (req, res, next) => {
 
     const profile = await Profile.findOne(profileQuery).populate(
       "user",
-      "name email avatar country city role"
+      "name email avatar country city role githubUsername"
     );
 
     if (!profile) {
@@ -270,7 +270,7 @@ exports.searchProfiles = async (req, res, next) => {
 
     const total = await Profile.countDocuments(query);
     const profiles = await Profile.find(query)
-      .populate("user", "name avatar country city email")
+      .populate("user", "name avatar country city email githubUsername")
       .sort(sortObj)
       .skip(skip)
       .limit(limitNum);
@@ -296,7 +296,7 @@ exports.getSpotlight = async (req, res, next) => {
       isPublic: true,
       "reputation.verifiedExperienceCount": { $gt: 0 },
     })
-      .populate("user", "name avatar country city")
+      .populate("user", "name avatar country city githubUsername")
       .sort({ "reputation.score": -1 })
       .limit(6);
 

@@ -158,46 +158,46 @@ export default function VerificationReviewPage() {
   }
 
   return (
-    <div className="flex-1 bg-neutral-50/50 py-10">
+    <div className="flex-1 bg-neutral-50/60 py-10 sm:py-14">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-6">
         {/* Banner */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-xs font-semibold">
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-xs font-semibold shadow-xs">
             <Lock className="w-3.5 h-3.5 text-emerald-600" />
             <span>Official Credential Audit Interface</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight">
             Employer Experience Verification
           </h1>
-          <p className="text-xs text-neutral-500 max-w-lg mx-auto">
-            You have been requested to audit and certify the technical contributions of {professional.name}.
+          <p className="text-xs sm:text-sm text-neutral-600 max-w-lg mx-auto leading-relaxed">
+            You have been requested to audit and certify the technical contributions of <span className="font-semibold text-neutral-900">{professional.name}</span>.
           </p>
         </div>
 
         {submittedData ? (
           /* Confirmation State */
-          <div className="bg-white rounded-xl border border-neutral-200 p-8 shadow-xs text-center space-y-4">
-            <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto text-emerald-600">
-              <ShieldCheck className="w-8 h-8 stroke-[2.5]" />
+          <div className="bg-white rounded-2xl border border-neutral-200/80 p-8 sm:p-10 shadow-sm text-center space-y-5">
+            <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto text-emerald-600 shadow-xs">
+              <ShieldCheck className="w-9 h-9 stroke-[2.2]" />
             </div>
 
-            <div>
-              <h2 className="text-xl font-bold text-neutral-900">
+            <div className="space-y-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight">
                 Verification Successfully {submittedData.status === "approved" ? "Certified" : "Declined"}
               </h2>
-              <p className="text-xs text-neutral-600 mt-1 max-w-md mx-auto">
+              <p className="text-xs sm:text-sm text-neutral-600 max-w-md mx-auto leading-relaxed">
                 {submittedData.status === "approved"
                   ? `The claim has been authenticated with verified reference code ${submittedData.referenceCode}. A Verified Badge has been added to ${professional.name}'s Professional Passport.`
                   : "The record was updated with your feedback notes."}
               </p>
             </div>
 
-            <div className="pt-4 flex justify-center gap-3">
+            <div className="pt-4 flex flex-wrap justify-center gap-3">
               <Link href={`/passport/${professional._id}`}>
-                <Button size="md">View Updated Passport</Button>
+                <Button size="md" className="rounded-xl shadow-xs">View Updated Passport</Button>
               </Link>
               <Link href="/">
-                <Button variant="outline" size="md">
+                <Button variant="outline" size="md" className="rounded-xl">
                   Home
                 </Button>
               </Link>
@@ -207,43 +207,44 @@ export default function VerificationReviewPage() {
           /* Review Form */
           <div className="space-y-6">
             {/* Candidate & Item Summary */}
-            <div className="bg-white rounded-xl border border-neutral-200 p-6 shadow-xs space-y-4">
-              <div className="flex items-center gap-4 border-b border-neutral-100 pb-4">
+            <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 sm:p-8 shadow-sm space-y-5">
+              <div className="flex items-center gap-4 border-b border-neutral-100 pb-5">
                 <Avatar
                   src={professional.avatar}
                   name={professional.name}
                   size="lg"
+                  className="shadow-xs"
                 />
                 <div>
                   <h2 className="text-base font-bold text-neutral-900">
                     {professional.name}
                   </h2>
-                  <div className="text-xs text-neutral-500">
+                  <div className="text-xs text-neutral-500 mt-0.5">
                     {professional.email} • {professional.city}, {professional.country}
                   </div>
                 </div>
               </div>
 
               {/* Claimed Experience Details */}
-              <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200 space-y-2 text-xs">
+              <div className="p-5 rounded-xl bg-neutral-50/80 border border-neutral-200/80 space-y-3 text-xs">
                 <div className="flex items-start justify-between">
                   <div>
-                    <span className="font-mono uppercase text-[10px] text-neutral-500 font-semibold">
+                    <span className="font-mono uppercase text-[10px] text-neutral-500 font-semibold tracking-wider">
                       Claimed {isExperience ? "Role" : "Project"}
                     </span>
-                    <h3 className="text-sm font-bold text-neutral-900">
+                    <h3 className="text-sm sm:text-base font-bold text-neutral-900 mt-0.5">
                       {claimItem?.title}
                     </h3>
                   </div>
                   <Badge variant="pending">Pending Your Audit</Badge>
                 </div>
 
-                <div className="text-neutral-700 font-medium">
+                <div className="text-neutral-700 font-semibold text-xs">
                   {isExperience ? claimItem?.company : claimItem?.clientOrCompany}
                 </div>
 
                 {isExperience && (
-                  <div className="text-neutral-500 text-[11px] flex items-center gap-2">
+                  <div className="text-neutral-500 text-xs flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-neutral-400" />
                     <span>
                       {formatDate(claimItem?.startDate)} –{" "}
@@ -261,11 +262,11 @@ export default function VerificationReviewPage() {
                 )}
 
                 {claimItem?.skillsUsed && claimItem.skillsUsed.length > 0 && (
-                  <div className="flex flex-wrap gap-1 pt-1">
+                  <div className="flex flex-wrap gap-1.5 pt-1">
                     {claimItem.skillsUsed.map((s, idx) => (
                       <span
                         key={idx}
-                        className="text-[10px] px-1.5 py-0.5 rounded bg-white border border-neutral-200 text-neutral-700 font-mono"
+                        className="text-[11px] px-2 py-0.5 rounded-md bg-white border border-neutral-200/80 text-neutral-700 font-mono shadow-2xs"
                       >
                         {s}
                       </span>
@@ -275,7 +276,7 @@ export default function VerificationReviewPage() {
               </div>
 
               {verification.requestMessage && (
-                <div className="p-3 bg-amber-50/60 rounded-md border border-amber-200 text-xs text-amber-900">
+                <div className="p-3.5 bg-amber-50/80 rounded-xl border border-amber-200/80 text-xs text-amber-900">
                   <span className="font-semibold">Candidate's Note:</span> “
                   {verification.requestMessage}”
                 </div>
@@ -285,7 +286,7 @@ export default function VerificationReviewPage() {
             {/* Review Decision Form */}
             <form
               onSubmit={handleSubmitDecision}
-              className="bg-white rounded-xl border border-neutral-200 p-6 sm:p-8 shadow-xs space-y-6"
+              className="bg-white rounded-2xl border border-neutral-200/80 p-6 sm:p-8 shadow-sm space-y-6"
             >
               <h2 className="text-sm font-bold text-neutral-900 uppercase tracking-wider border-b border-neutral-100 pb-3">
                 Audit Decision & Endorsement
@@ -296,14 +297,14 @@ export default function VerificationReviewPage() {
                 <label className="block text-xs font-semibold text-neutral-800 mb-2">
                   Verification Decision
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button
                     type="button"
                     onClick={() => setDecision("approved")}
-                    className={`p-3 rounded-lg border text-left flex items-start gap-3 transition-colors ${
+                    className={`p-3.5 rounded-xl border text-left flex items-start gap-3 transition-all ${
                       decision === "approved"
-                        ? "border-emerald-600 bg-emerald-50/50 ring-1 ring-emerald-600"
-                        : "border-neutral-200 hover:bg-neutral-50"
+                        ? "border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600/20 shadow-xs"
+                        : "border-neutral-200 hover:bg-neutral-50/80"
                     }`}
                   >
                     <CheckCircle2
@@ -326,10 +327,10 @@ export default function VerificationReviewPage() {
                   <button
                     type="button"
                     onClick={() => setDecision("rejected")}
-                    className={`p-3 rounded-lg border text-left flex items-start gap-3 transition-colors ${
+                    className={`p-3.5 rounded-xl border text-left flex items-start gap-3 transition-all ${
                       decision === "rejected"
-                        ? "border-rose-600 bg-rose-50/50 ring-1 ring-rose-600"
-                        : "border-neutral-200 hover:bg-neutral-50"
+                        ? "border-rose-600 bg-rose-50/60 ring-2 ring-rose-600/20 shadow-xs"
+                        : "border-neutral-200 hover:bg-neutral-50/80"
                     }`}
                   >
                     <XCircle
@@ -354,7 +355,7 @@ export default function VerificationReviewPage() {
               {/* Verifier Credentials */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-neutral-800 mb-1">
+                  <label className="block text-xs font-semibold text-neutral-800 mb-1.5">
                     Your Name (Auditor)
                   </label>
                   <input
@@ -363,12 +364,12 @@ export default function VerificationReviewPage() {
                     value={verifierName}
                     onChange={(e) => setVerifierName(e.target.value)}
                     placeholder="e.g. Tunde Adebayo"
-                    className="w-full text-xs px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-1 focus:ring-neutral-900"
+                    className="w-full text-xs px-3.5 py-2.5 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-900 transition-all shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-neutral-800 mb-1">
+                  <label className="block text-xs font-semibold text-neutral-800 mb-1.5">
                     Auditing Organization
                   </label>
                   <input
@@ -377,7 +378,7 @@ export default function VerificationReviewPage() {
                     value={verifierOrg}
                     onChange={(e) => setVerifierOrg(e.target.value)}
                     placeholder="e.g. Paystack / Safaricom"
-                    className="w-full text-xs px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-1 focus:ring-neutral-900"
+                    className="w-full text-xs px-3.5 py-2.5 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-900 transition-all shadow-2xs"
                   />
                 </div>
               </div>
@@ -386,13 +387,13 @@ export default function VerificationReviewPage() {
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-neutral-800 mb-1">
+                      <label className="block text-xs font-semibold text-neutral-800 mb-1.5">
                         Professional Relationship
                       </label>
                       <select
                         value={relationship}
                         onChange={(e) => setRelationship(e.target.value)}
-                        className="w-full text-xs px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-1 focus:ring-neutral-900 bg-white"
+                        className="w-full text-xs px-3.5 py-2.5 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-900 bg-white font-medium transition-all shadow-2xs"
                       >
                         <option value="Direct Manager">Direct Manager</option>
                         <option value="Team Lead / CTO">Team Lead / CTO</option>
@@ -402,22 +403,22 @@ export default function VerificationReviewPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-neutral-800 mb-1">
+                      <label className="block text-xs font-semibold text-neutral-800 mb-1.5">
                         Overall Performance Rating ({rating}/5 Stars)
                       </label>
-                      <div className="flex items-center gap-1 pt-1.5">
+                      <div className="flex items-center gap-1.5 pt-1">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
                             key={star}
                             type="button"
                             onClick={() => setRating(star)}
-                            className="p-1 hover:scale-110 transition-transform"
+                            className="p-1 hover:scale-115 transition-transform"
                           >
                             <Star
                               className={`w-5 h-5 ${
                                 star <= rating
                                   ? "text-amber-500 fill-amber-500"
-                                  : "text-neutral-300"
+                                  : "text-neutral-200"
                               }`}
                             />
                           </button>
@@ -427,10 +428,10 @@ export default function VerificationReviewPage() {
                   </div>
 
                   {/* Competence breakdown sliders */}
-                  <div className="grid grid-cols-3 gap-3 p-3 bg-neutral-50 rounded-lg border border-neutral-200 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-neutral-50/80 rounded-xl border border-neutral-200/80 text-xs">
                     <div>
-                      <label className="text-[11px] font-semibold text-neutral-600 block mb-1">
-                        Tech Competence: {technicalCompetence}/5
+                      <label className="text-[11px] font-semibold text-neutral-700 block mb-1">
+                        Tech Competence: <span className="font-bold text-neutral-950">{technicalCompetence}/5</span>
                       </label>
                       <input
                         type="range"
@@ -443,8 +444,8 @@ export default function VerificationReviewPage() {
                     </div>
 
                     <div>
-                      <label className="text-[11px] font-semibold text-neutral-600 block mb-1">
-                        Reliability: {reliability}/5
+                      <label className="text-[11px] font-semibold text-neutral-700 block mb-1">
+                        Reliability: <span className="font-bold text-neutral-950">{reliability}/5</span>
                       </label>
                       <input
                         type="range"
@@ -457,8 +458,8 @@ export default function VerificationReviewPage() {
                     </div>
 
                     <div>
-                      <label className="text-[11px] font-semibold text-neutral-600 block mb-1">
-                        Communication: {communication}/5
+                      <label className="text-[11px] font-semibold text-neutral-700 block mb-1">
+                        Communication: <span className="font-bold text-neutral-950">{communication}/5</span>
                       </label>
                       <input
                         type="range"
@@ -474,7 +475,7 @@ export default function VerificationReviewPage() {
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-neutral-800 mb-1">
+                <label className="block text-xs font-semibold text-neutral-800 mb-1.5">
                   {decision === "approved"
                     ? "Manager Endorsement & Audit Notes (Published on Passport)"
                     : "Rejection Reason (Internal)"}
@@ -489,7 +490,7 @@ export default function VerificationReviewPage() {
                       ? "Describe candidate's accomplishments, reliability, and technical impact during their tenure..."
                       : "Explain why this experience cannot be certified..."
                   }
-                  className="w-full text-xs px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-1 focus:ring-neutral-900"
+                  className="w-full text-xs px-3.5 py-2.5 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-900 transition-all shadow-2xs leading-relaxed"
                 />
               </div>
 
@@ -498,11 +499,11 @@ export default function VerificationReviewPage() {
                   type="submit"
                   size="md"
                   loading={submitting}
-                  className={
+                  className={`rounded-xl shadow-sm ${
                     decision === "approved"
                       ? "bg-emerald-700 hover:bg-emerald-800 text-white"
                       : "bg-rose-600 hover:bg-rose-700 text-white"
-                  }
+                  }`}
                 >
                   {decision === "approved"
                     ? "Confirm & Mint Verification Badge"

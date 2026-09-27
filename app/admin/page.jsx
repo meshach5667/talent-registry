@@ -205,11 +205,12 @@ export default function AdminDashboardPage() {
   const stats = overview?.stats || {};
 
   return (
-    <div className="flex-1 bg-neutral-50/50 py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <div className="flex-1 bg-neutral-50/60 py-10 sm:py-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Header */}
-        <div className="bg-neutral-900 text-white p-6 sm:p-8 rounded-xl shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
+        <div className="relative overflow-hidden bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-950 text-white p-6 sm:p-8 rounded-2xl shadow-sm border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+          <div className="space-y-2 relative z-10">
             <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider">
               <ShieldAlert className="w-4 h-4" />
               <span>Registry Root Administration</span>
@@ -217,85 +218,85 @@ export default function AdminDashboardPage() {
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               Platform Governance Console
             </h1>
-            <p className="text-xs text-neutral-400">
-              Manage network participants, enforce verification integrity, and inspect audit logs.
+            <p className="text-xs sm:text-sm text-neutral-400 max-w-xl">
+              Manage network participants, enforce verification integrity, and inspect cryptographic audit logs.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Badge className="bg-neutral-800 text-neutral-300 border-neutral-700 font-mono text-xs">
+          <div className="flex items-center gap-2 relative z-10">
+            <Badge className="bg-neutral-800/90 text-neutral-300 border-neutral-700/80 font-mono text-xs px-3 py-1.5 rounded-lg shadow-xs">
               Region: Pan-Africa (Verified)
             </Badge>
           </div>
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <div className="bg-white p-4 rounded-xl border border-neutral-200 shadow-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
+          <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs hover:shadow-sm transition-all duration-200">
             <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
               Total Users
             </div>
-            <div className="text-2xl font-bold text-neutral-900 mt-1">
+            <div className="text-2xl sm:text-3xl font-extrabold text-neutral-900 mt-1">
               {stats.totalUsers || 0}
             </div>
-            <div className="text-[10px] text-neutral-400 mt-0.5">
+            <div className="text-[11px] text-neutral-400 mt-1">
               {stats.professionalsCount} Pros / {stats.employersCount} Orgs
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-neutral-200 shadow-xs">
+          <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs hover:shadow-sm transition-all duration-200">
             <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
               Organizations
             </div>
-            <div className="text-2xl font-bold text-neutral-900 mt-1">
+            <div className="text-2xl sm:text-3xl font-extrabold text-neutral-900 mt-1">
               {stats.totalOrganizations || 0}
             </div>
-            <div className="text-[10px] text-emerald-700 mt-0.5 font-medium">
+            <div className="text-[11px] text-emerald-700 mt-1 font-semibold">
               {stats.verifiedOrganizations} Verified
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-neutral-200 shadow-xs">
+          <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs hover:shadow-sm transition-all duration-200">
             <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
               Verifications
             </div>
-            <div className="text-2xl font-bold text-neutral-900 mt-1">
+            <div className="text-2xl sm:text-3xl font-extrabold text-neutral-900 mt-1">
               {stats.totalVerifications || 0}
             </div>
-            <div className="text-[10px] text-neutral-400 mt-0.5">
+            <div className="text-[11px] text-neutral-400 mt-1">
               {stats.approvedVerifications} Certified
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-neutral-200 shadow-xs">
+          <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs hover:shadow-sm transition-all duration-200">
             <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
               Pending Audits
             </div>
-            <div className="text-2xl font-bold text-amber-600 mt-1">
+            <div className="text-2xl sm:text-3xl font-extrabold text-amber-600 mt-1">
               {stats.pendingVerifications || 0}
             </div>
-            <div className="text-[10px] text-neutral-400 mt-0.5">In Review</div>
+            <div className="text-[11px] text-neutral-400 mt-1">In Review</div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-neutral-200 shadow-xs col-span-2 sm:col-span-1">
+          <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs hover:shadow-sm transition-all duration-200 col-span-2 sm:col-span-1">
             <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
               Open Disputes
             </div>
-            <div className="text-2xl font-bold text-rose-600 mt-1">
+            <div className="text-2xl sm:text-3xl font-extrabold text-rose-600 mt-1">
               {stats.openDisputes || 0}
             </div>
-            <div className="text-[10px] text-neutral-400 mt-0.5">Integrity Queue</div>
+            <div className="text-[11px] text-neutral-400 mt-1">Integrity Queue</div>
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex border-b border-neutral-200 space-x-2 text-xs font-semibold overflow-x-auto">
+        {/* Navigation Tabs Pill Bar */}
+        <div className="p-1.5 bg-neutral-100/90 rounded-2xl border border-neutral-200/80 inline-flex flex-wrap gap-1.5 text-xs font-semibold shadow-xs">
           <button
             onClick={() => setActiveTab("overview")}
-            className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`py-2 px-3.5 rounded-xl flex items-center gap-1.5 transition-all duration-150 whitespace-nowrap ${
               activeTab === "overview"
-                ? "border-neutral-900 text-neutral-950 font-bold"
-                : "border-transparent text-neutral-500 hover:text-neutral-900"
+                ? "bg-white text-neutral-950 font-bold shadow-xs"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/50"
             }`}
           >
             <span>Overview & Activity</span>
@@ -303,10 +304,10 @@ export default function AdminDashboardPage() {
 
           <button
             onClick={() => setActiveTab("users")}
-            className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`py-2 px-3.5 rounded-xl flex items-center gap-1.5 transition-all duration-150 whitespace-nowrap ${
               activeTab === "users"
-                ? "border-neutral-900 text-neutral-950 font-bold"
-                : "border-transparent text-neutral-500 hover:text-neutral-900"
+                ? "bg-white text-neutral-950 font-bold shadow-xs"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/50"
             }`}
           >
             <Users className="w-4 h-4" />
@@ -315,10 +316,10 @@ export default function AdminDashboardPage() {
 
           <button
             onClick={() => setActiveTab("organizations")}
-            className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`py-2 px-3.5 rounded-xl flex items-center gap-1.5 transition-all duration-150 whitespace-nowrap ${
               activeTab === "organizations"
-                ? "border-neutral-900 text-neutral-950 font-bold"
-                : "border-transparent text-neutral-500 hover:text-neutral-900"
+                ? "bg-white text-neutral-950 font-bold shadow-xs"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/50"
             }`}
           >
             <Building2 className="w-4 h-4" />
@@ -327,10 +328,10 @@ export default function AdminDashboardPage() {
 
           <button
             onClick={() => setActiveTab("disputes")}
-            className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`py-2 px-3.5 rounded-xl flex items-center gap-1.5 transition-all duration-150 whitespace-nowrap ${
               activeTab === "disputes"
-                ? "border-neutral-900 text-neutral-950 font-bold"
-                : "border-transparent text-neutral-500 hover:text-neutral-900"
+                ? "bg-white text-neutral-950 font-bold shadow-xs"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/50"
             }`}
           >
             <AlertTriangle className="w-4 h-4" />
@@ -339,10 +340,10 @@ export default function AdminDashboardPage() {
 
           <button
             onClick={() => setActiveTab("audit")}
-            className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap ${
+            className={`py-2 px-3.5 rounded-xl flex items-center gap-1.5 transition-all duration-150 whitespace-nowrap ${
               activeTab === "audit"
-                ? "border-neutral-900 text-neutral-950 font-bold"
-                : "border-transparent text-neutral-500 hover:text-neutral-900"
+                ? "bg-white text-neutral-950 font-bold shadow-xs"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/50"
             }`}
           >
             <History className="w-4 h-4" />
@@ -352,7 +353,7 @@ export default function AdminDashboardPage() {
 
         {/* Tab 1: Overview */}
         {activeTab === "overview" && (
-          <div className="bg-white rounded-xl border border-neutral-200 p-6 shadow-xs space-y-4">
+          <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 sm:p-8 shadow-sm space-y-4">
             <h2 className="text-base font-bold text-neutral-900 border-b border-neutral-100 pb-3">
               Recent System & Compliance Events
             </h2>
@@ -381,16 +382,16 @@ export default function AdminDashboardPage() {
         {/* Tab 2: Users Management */}
         {activeTab === "users" && (
           <div className="space-y-4">
-            <div className="bg-white p-4 rounded-xl border border-neutral-200 shadow-xs flex flex-col sm:flex-row gap-3 text-xs">
+            <div className="bg-white p-4 rounded-2xl border border-neutral-200/80 shadow-sm flex flex-col sm:flex-row gap-3 text-xs">
               <div className="flex-1 relative">
-                <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-3" />
                 <input
                   type="text"
                   value={userQuery}
                   onChange={(e) => setUserQuery(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && loadUsers()}
                   placeholder="Search users by name, email..."
-                  className="w-full pl-9 pr-3 py-2 border border-neutral-300 rounded-md"
+                  className="w-full pl-10 pr-3.5 py-2.5 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-900 text-xs shadow-2xs"
                 />
               </div>
 
@@ -400,7 +401,7 @@ export default function AdminDashboardPage() {
                   setUserRoleFilter(e.target.value);
                   setTimeout(loadUsers, 50);
                 }}
-                className="px-3 py-2 border border-neutral-300 rounded-md bg-white font-medium"
+                className="px-3.5 py-2.5 border border-neutral-300 rounded-xl bg-white font-medium text-xs shadow-2xs focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
               >
                 <option value="All">All Roles</option>
                 <option value="professional">Professional</option>
@@ -408,28 +409,28 @@ export default function AdminDashboardPage() {
                 <option value="admin">Admin</option>
               </select>
 
-              <Button size="sm" onClick={loadUsers}>
+              <Button size="sm" onClick={loadUsers} className="rounded-xl px-4">
                 Filter
               </Button>
             </div>
 
-            <div className="bg-white rounded-xl border border-neutral-200 shadow-xs overflow-hidden">
+            <div className="bg-white rounded-2xl border border-neutral-200/80 shadow-sm overflow-hidden">
               <div className="divide-y divide-neutral-100 text-xs">
                 {usersList.map((u) => (
                   <div
                     key={u._id}
-                    className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-neutral-50/50 transition-colors"
                   >
-                    <div className="flex items-center gap-3">
-                      <Avatar src={u.avatar} name={u.name} size="md" />
+                    <div className="flex items-center gap-3.5">
+                      <Avatar src={u.avatar} name={u.name} size="md" className="shadow-xs" />
                       <div>
                         <div className="font-bold text-neutral-900 text-sm flex items-center gap-2">
                           <span>{u.name}</span>
-                          <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-neutral-100 uppercase">
+                          <span className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-neutral-100 uppercase font-semibold text-neutral-700">
                             {u.role}
                           </span>
                         </div>
-                        <div className="text-neutral-500">
+                        <div className="text-neutral-500 mt-0.5">
                           {u.email} • {u.city}, {u.country}
                         </div>
                       </div>
@@ -445,7 +446,7 @@ export default function AdminDashboardPage() {
                       <Button
                         size="sm"
                         variant={u.status === "active" ? "outline" : "default"}
-                        className="text-xs h-7 px-3"
+                        className="text-xs h-8 px-3 rounded-lg shadow-2xs"
                         onClick={() => handleToggleUserStatus(u._id, u.status)}
                       >
                         {u.status === "active" ? "Suspend" : "Activate"}
@@ -460,13 +461,13 @@ export default function AdminDashboardPage() {
 
         {/* Tab 3: Organizations Verification */}
         {activeTab === "organizations" && (
-          <div className="bg-white rounded-xl border border-neutral-200 shadow-xs overflow-hidden">
-            <div className="p-4 border-b border-neutral-100 flex items-center justify-between">
+          <div className="bg-white rounded-2xl border border-neutral-200/80 shadow-sm overflow-hidden">
+            <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-bold text-neutral-900">
                   Institutional Verification Control
                 </h2>
-                <p className="text-xs text-neutral-500">
+                <p className="text-xs text-neutral-500 mt-0.5">
                   Toggle official verified checkmarks for registered organizations.
                 </p>
               </div>
@@ -476,15 +477,15 @@ export default function AdminDashboardPage() {
               {orgsList.map((org) => (
                 <div
                   key={org._id}
-                  className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-neutral-50/50 transition-colors"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center font-bold text-neutral-800">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-11 h-11 rounded-xl bg-neutral-100 border border-neutral-200/80 flex items-center justify-center font-bold text-neutral-800 shadow-2xs overflow-hidden">
                       {org.logo ? (
                         <img
                           src={org.logo}
                           alt={org.name}
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         <Building2 className="w-5 h-5 text-neutral-400" />
@@ -497,7 +498,7 @@ export default function AdminDashboardPage() {
                           <ShieldCheck className="w-4 h-4 text-emerald-600" />
                         )}
                       </div>
-                      <div className="text-neutral-500">
+                      <div className="text-neutral-500 mt-0.5">
                         {org.city}, {org.country} • {org.industry} • Domain: @{org.workEmailDomain || "N/A"}
                       </div>
                     </div>
@@ -513,7 +514,7 @@ export default function AdminDashboardPage() {
                     <Button
                       size="sm"
                       variant={org.verified ? "outline" : "default"}
-                      className={`text-xs h-7 px-3 ${
+                      className={`text-xs h-8 px-3.5 rounded-lg shadow-2xs ${
                         !org.verified ? "bg-emerald-700 hover:bg-emerald-800 text-white" : ""
                       }`}
                       onClick={() => handleToggleOrgVerification(org._id, org.verified)}
@@ -529,29 +530,29 @@ export default function AdminDashboardPage() {
 
         {/* Tab 4: Disputes & Reports */}
         {activeTab === "disputes" && (
-          <div className="bg-white rounded-xl border border-neutral-200 shadow-xs overflow-hidden">
-            <div className="p-4 border-b border-neutral-100">
+          <div className="bg-white rounded-2xl border border-neutral-200/80 shadow-sm overflow-hidden">
+            <div className="p-5 border-b border-neutral-100">
               <h2 className="text-sm font-bold text-neutral-900">
                 Integrity Reports & Content Disputes
               </h2>
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-neutral-500 mt-0.5">
                 Audit community reports of fraudulent claims, misrepresentation, or disputed credentials.
               </p>
             </div>
 
             <div className="divide-y divide-neutral-100 text-xs">
               {disputesList.length === 0 ? (
-                <div className="p-8 text-center text-neutral-500">
+                <div className="p-10 text-center text-neutral-500 font-medium">
                   No active disputes filed on the registry.
                 </div>
               ) : (
                 disputesList.map((d) => (
-                  <div key={d._id} className="p-4 space-y-2">
+                  <div key={d._id} className="p-5 space-y-2 hover:bg-neutral-50/50 transition-colors">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-rose-700">{d.reason}</span>
                         <span className="text-neutral-400">•</span>
-                        <span className="text-neutral-500">
+                        <span className="text-neutral-500 font-medium">
                           Target: {d.targetType} ({d.targetTitle || d.targetId})
                         </span>
                       </div>
@@ -562,11 +563,11 @@ export default function AdminDashboardPage() {
                       </Badge>
                     </div>
 
-                    <p className="text-neutral-700">{d.details}</p>
+                    <p className="text-neutral-700 leading-relaxed">{d.details}</p>
 
                     <div className="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
                       <span>
-                        Reported by: {d.reporter?.name} ({d.reporter?.email}) on{" "}
+                        Reported by: <span className="font-medium text-neutral-600">{d.reporter?.name}</span> ({d.reporter?.email}) on{" "}
                         {new Date(d.createdAt).toLocaleDateString()}
                       </span>
 
@@ -574,7 +575,7 @@ export default function AdminDashboardPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-7 text-xs"
+                          className="h-8 text-xs rounded-lg shadow-2xs"
                           onClick={() => {
                             setSelectedDispute(d);
                             setIsResolveModalOpen(true);
@@ -593,17 +594,17 @@ export default function AdminDashboardPage() {
 
         {/* Tab 5: Audit Trail */}
         {activeTab === "audit" && (
-          <div className="bg-white rounded-xl border border-neutral-200 shadow-xs overflow-hidden">
-            <div className="p-4 border-b border-neutral-100 flex items-center justify-between">
+          <div className="bg-white rounded-2xl border border-neutral-200/80 shadow-sm overflow-hidden">
+            <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-bold text-neutral-900">
                   Cryptographic Audit Trail
                 </h2>
-                <p className="text-xs text-neutral-500">
+                <p className="text-xs text-neutral-500 mt-0.5">
                   Immutable event log recording all verification minting, updates, and logins.
                 </p>
               </div>
-              <Button size="sm" variant="outline" onClick={loadAuditLogs}>
+              <Button size="sm" variant="outline" onClick={loadAuditLogs} className="rounded-lg shadow-2xs">
                 Refresh Trail
               </Button>
             </div>
@@ -612,13 +613,13 @@ export default function AdminDashboardPage() {
               {auditLogs.map((log) => (
                 <div
                   key={log._id}
-                  className="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-neutral-50"
+                  className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-neutral-50/80 transition-colors"
                 >
                   <div>
                     <span className="text-emerald-700 font-bold">
                       [{log.action}]
                     </span>{" "}
-                    <span className="text-neutral-800">
+                    <span className="text-neutral-800 font-medium">
                       {log.user ? `${log.user.name} (${log.user.role})` : "Anonymous"}
                     </span>
                     <div className="text-[11px] text-neutral-400 font-sans mt-0.5">

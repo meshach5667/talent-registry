@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, AlertCircle, Building2, User, UserCheck } from "lucide-react";
+import { GithubButton } from "@/components/auth/GithubButton";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -67,27 +68,27 @@ export default function RegisterPage() {
 
   return (
     <div className="flex-1 flex items-center justify-center p-4 py-12 bg-neutral-50/50">
-      <div className="w-full max-w-lg bg-white border border-neutral-200 rounded-xl shadow-xs p-6 sm:p-8">
+      <div className="w-full max-w-lg bg-white border border-neutral-200 rounded-2xl shadow-xl shadow-neutral-900/5 p-6 sm:p-8">
         <div className="flex flex-col items-center text-center mb-6">
-          <div className="w-10 h-10 rounded bg-neutral-900 text-white flex items-center justify-center mb-3">
-            <ShieldCheck className="w-6 h-6 text-emerald-400 stroke-[2.5]" />
+          <div className="w-12 h-12 rounded-xl bg-neutral-900 text-white flex items-center justify-center mb-3 shadow-md shadow-neutral-900/10">
+            <ShieldCheck className="w-7 h-7 text-emerald-400 stroke-[2.2]" />
           </div>
-          <h1 className="text-xl font-bold text-neutral-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight">
             Create Your Account
           </h1>
-          <p className="text-xs text-neutral-500 mt-1">
+          <p className="text-xs text-neutral-500 mt-1 max-w-sm">
             Join Africa's professional verification & talent discovery platform
           </p>
         </div>
 
         {/* Role Selector Tabs */}
-        <div className="grid grid-cols-3 gap-2 mb-6 p-1 bg-neutral-100 rounded-lg">
+        <div className="grid grid-cols-3 gap-2 mb-6 p-1.5 bg-neutral-100/80 rounded-xl border border-neutral-200/60">
           <button
             type="button"
             onClick={() => setRole("professional")}
-            className={`py-2 text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 transition-colors ${
+            className={`py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
               role === "professional"
-                ? "bg-white text-neutral-900 shadow-xs"
+                ? "bg-white text-neutral-950 shadow-xs border border-neutral-200/50"
                 : "text-neutral-500 hover:text-neutral-900"
             }`}
           >
@@ -98,9 +99,9 @@ export default function RegisterPage() {
           <button
             type="button"
             onClick={() => setRole("employer")}
-            className={`py-2 text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 transition-colors ${
+            className={`py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
               role === "employer"
-                ? "bg-white text-neutral-900 shadow-xs"
+                ? "bg-white text-neutral-950 shadow-xs border border-neutral-200/50"
                 : "text-neutral-500 hover:text-neutral-900"
             }`}
           >
@@ -111,9 +112,9 @@ export default function RegisterPage() {
           <button
             type="button"
             onClick={() => setRole("admin")}
-            className={`py-2 text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 transition-colors ${
+            className={`py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
               role === "admin"
-                ? "bg-white text-neutral-900 shadow-xs"
+                ? "bg-white text-neutral-950 shadow-xs border border-neutral-200/50"
                 : "text-neutral-500 hover:text-neutral-900"
             }`}
           >
@@ -123,9 +124,27 @@ export default function RegisterPage() {
         </div>
 
         {(error || authError) && (
-          <div className="mb-4 p-3 rounded bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{error || authError}</span>
+          <div className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <span className="leading-tight">{error || authError}</span>
+          </div>
+        )}
+
+        {/* GitHub Signup Option for Professionals */}
+        {role === "professional" && (
+          <div className="mb-5">
+            <GithubButton mode="register" />
+
+            <div className="relative my-5">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-neutral-200" />
+              </div>
+              <div className="relative flex justify-center text-[11px] uppercase tracking-wider">
+                <span className="bg-white px-2 text-neutral-400 font-medium">
+                  or register manually
+                </span>
+              </div>
+            </div>
           </div>
         )}
 

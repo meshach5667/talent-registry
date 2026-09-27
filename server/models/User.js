@@ -23,9 +23,21 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Please provide a password"],
+      required: function () {
+        return !this.githubId;
+      },
       minlength: [6, "Password must be at least 6 characters"],
       select: false,
+    },
+    githubId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    githubUsername: {
+      type: String,
+      trim: true,
+      default: "",
     },
     role: {
       type: String,
@@ -69,7 +81,7 @@ const UserSchema = new mongoose.Schema(
 
 // Encrypt password before saving
 UserSchema.pre("save", async function () {
-  if (!this.isModified("password")) {
+  if (!this.isModified("password") || !this.password) {
     return;
   }
   const salt = await bcrypt.genSalt(10);

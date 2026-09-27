@@ -302,3 +302,381 @@ exports.deletePhoto = async (req, res, next) => {
     next(error);
   }
 };
+
+// Helper to create unique passport slug
+async function generateUniqueSlug(name) {
+  let baseSlug = (name || "developer")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+  let uniqueSlug = baseSlug || "talent";
+  let counter = 1;
+  while (await Profile.findOne({ passportSlug: uniqueSlug })) {
+    uniqueSlug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+  return uniqueSlug;
+}
+
+// @desc    Initiate GitHub OAuth
+// @route   GET /api/v1/auth/github
+// @access  Public
+exports.githubAuth = async (req, res) => {
+  const clientId = process.env.GITHUB_CLIENT_ID;
+  const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
+  const callbackUrl =
+    process.env.GITHUB_CALLBACK_URL ||
+    `${req.protocol}://${req.get("host")}/api/v1/auth/github/callback`;
+
+  if (!clientId) {
+    return res.redirect(
+      `${clientUrl}/auth/login?error=${encodeURIComponent(
+        "GitHub OAuth is not configured. Please add GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET to .env or use the Quick GitHub Demo."
+      )}`
+    );
+  }
+
+  const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user,user:email&redirect_uri=${encodeURIComponent(
+    callbackUrl
+  )}`;
+  res.redirect(githubAuthUrl);
+};
+
+// @desc    GitHub OAuth callback
+// @route   GET /api/v1/auth/github/callback
+// @access  Public
+exports.githubCallback = async (req, res, next) => {
+  const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
+  try {
+    const { code } = req.query;
+    if (!code) {
+      return res.redirect(
+        `${clientUrl}/auth/login?error=${encodeURIComponent(
+          "No authorization code returned from GitHub."
+        )}`
+      );
+    }
+
+    const clientId = process.env.GITHUB_CLIENT_ID;
+    const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+    const callbackUrl =
+      process.env.GITHUB_CALLBACK_URL ||
+      `${req.protocol}://${req.get("host")}/api/v1/auth/github/callback`;
+
+    // 1. Exchange code for access token
+    const tokenResponse = await fetch(
+      "https://github.com/login/oauth/access_token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          client_id: clientId,
+          client_secret: clientSecret,
+          code,
+          redirect_uri: callbackUrl,
+        }),
+      }
+    );
+
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) {
+      return res.redirect(
+        `${clientUrl}/auth/login?error=${encodeURIComponent(
+          tokenData.error_description || "Failed to obtain access token from GitHub."
+        )}`
+      );
+    }
+
+    const accessToken = tokenData.access_token;
+
+    // 2. Fetch GitHub profile
+    const userRes = await fetch("https://api.github.com/user", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "User-Agent": "TalentRegistry-App",
+      },
+    });
+    const ghUser = await userRes.json();
+
+    // 3. Fetch primary email if needed
+    let email = ghUser.email;
+    if (!email) {
+      const emailRes = await fetch("https://api.github.com/user/emails", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "User-Agent": "TalentRegistry-App",
+        },
+      });
+      const emails = await emailRes.json();
+      if (Array.isArray(emails)) {
+        const primary = emails.find((e) => e.primary && e.verified) || emails[0];
+        if (primary) email = primary.email;
+      }
+    }
+
+    if (!email) {
+      email = `${ghUser.login}@users.noreply.github.com`;
+    }
+
+    // 4. Find or create user
+    let user = await User.findOne({
+      $or: [{ githubId: String(ghUser.id) }, { email: email.toLowerCase() }],
+    });
+
+    if (user) {
+      user.githubId = String(ghUser.id);
+      user.githubUsername = ghUser.login || user.githubUsername;
+      if (!user.avatar && ghUser.avatar_url) {
+        user.avatar = ghUser.avatar_url;
+      }
+      user.lastLogin = Date.now();
+      await user.save({ validateBeforeSave: false });
+    } else {
+      user = await User.create({
+        name: ghUser.name || ghUser.login || "GitHub Engineer",
+        email: email.toLowerCase(),
+        githubId: String(ghUser.id),
+        githubUsername: ghUser.login || "",
+        avatar: ghUser.avatar_url || "",
+        role: "professional",
+        country: "Nigeria",
+        city: ghUser.location || "Lagos",
+        status: "active",
+        lastLogin: Date.now(),
+      });
+
+      const uniqueSlug = await generateUniqueSlug(user.name);
+      await Profile.create({
+        user: user._id,
+        headline: ghUser.bio || "Open Source Software Engineer",
+        profession: "Software Engineer",
+        country: user.country,
+        city: user.city,
+        passportSlug: uniqueSlug,
+        skills: [
+          { name: "Git", category: "Technical" },
+          { name: "GitHub", category: "Technical" },
+          { name: "Open Source", category: "Technical" },
+          { name: "JavaScript", category: "Technical" },
+        ],
+      });
+    }
+
+    const token = user.getSignedJwtToken();
+
+    await logAudit({
+      userId: user._id,
+      action: "USER_LOGIN_GITHUB",
+      targetType: "User",
+      targetId: user._id.toString(),
+      req,
+      details: { githubUsername: ghUser.login },
+    });
+
+    return res.redirect(`${clientUrl}/auth/callback?token=${token}`);
+  } catch (error) {
+    console.error("[GitHub OAuth Error]:", error);
+    return res.redirect(
+      `${clientUrl}/auth/login?error=${encodeURIComponent(
+        error.message || "GitHub authentication failed"
+      )}`
+    );
+  }
+};
+
+// @desc    Direct / Client Exchange for GitHub or Mock Developer Login
+// @route   POST /api/v1/auth/github/exchange
+// @access  Public
+exports.githubExchange = async (req, res, next) => {
+  try {
+    const { code, demo } = req.body;
+
+    // Handle instant mock/demo test login if user requested demo test
+    if (demo) {
+      let demoUser = await User.findOne({ email: "octocat.dev@github.talentregistry.africa" });
+      if (!demoUser) {
+        demoUser = await User.create({
+          name: "Amara Okonkwo (GitHub Pro)",
+          email: "octocat.dev@github.talentregistry.africa",
+          githubId: "gh_8829141",
+          githubUsername: "amara-rust",
+          avatar: "https://avatars.githubusercontent.com/u/583231?v=4",
+          role: "professional",
+          country: "Nigeria",
+          city: "Lagos",
+          status: "active",
+          lastLogin: Date.now(),
+        });
+
+        const slug = await generateUniqueSlug(demoUser.name);
+        await Profile.create({
+          user: demoUser._id,
+          headline: "Distributed Systems Architect & Core Contributor",
+          profession: "Systems Engineer",
+          country: "Nigeria",
+          city: "Lagos",
+          passportSlug: slug,
+          skills: [
+            { name: "Rust", category: "Technical" },
+            { name: "Go", category: "Technical" },
+            { name: "Kubernetes", category: "Technical" },
+            { name: "Distributed Systems", category: "Technical" },
+          ],
+        });
+      }
+
+      const token = demoUser.getSignedJwtToken();
+      const profile = await Profile.findOne({ user: demoUser._id });
+
+      return res.status(200).json({
+        success: true,
+        token,
+        user: {
+          id: demoUser._id,
+          name: demoUser.name,
+          email: demoUser.email,
+          role: demoUser.role,
+          avatar: demoUser.avatar,
+          githubUsername: demoUser.githubUsername,
+          country: demoUser.country,
+          city: demoUser.city,
+          profile,
+        },
+      });
+    }
+
+    if (!code) {
+      return res.status(400).json({
+        success: false,
+        message: "Authorization code is required.",
+      });
+    }
+
+    const clientId = process.env.GITHUB_CLIENT_ID;
+    const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+
+    if (!clientId || !clientSecret) {
+      return res.status(400).json({
+        success: false,
+        message: "GitHub credentials not configured on the server.",
+      });
+    }
+
+    const tokenResponse = await fetch(
+      "https://github.com/login/oauth/access_token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          client_id: clientId,
+          client_secret: clientSecret,
+          code,
+        }),
+      }
+    );
+
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) {
+      return res.status(400).json({
+        success: false,
+        message: tokenData.error_description || "Invalid authorization code",
+      });
+    }
+
+    const userRes = await fetch("https://api.github.com/user", {
+      headers: {
+        Authorization: `Bearer ${tokenData.access_token}`,
+        "User-Agent": "TalentRegistry-App",
+      },
+    });
+    const ghUser = await userRes.json();
+
+    let email = ghUser.email;
+    if (!email) {
+      const emailRes = await fetch("https://api.github.com/user/emails", {
+        headers: {
+          Authorization: `Bearer ${tokenData.access_token}`,
+          "User-Agent": "TalentRegistry-App",
+        },
+      });
+      const emails = await emailRes.json();
+      if (Array.isArray(emails)) {
+        const primary = emails.find((e) => e.primary && e.verified) || emails[0];
+        if (primary) email = primary.email;
+      }
+    }
+
+    if (!email) {
+      email = `${ghUser.login}@users.noreply.github.com`;
+    }
+
+    let user = await User.findOne({
+      $or: [{ githubId: String(ghUser.id) }, { email: email.toLowerCase() }],
+    });
+
+    if (user) {
+      user.githubId = String(ghUser.id);
+      user.githubUsername = ghUser.login || user.githubUsername;
+      if (!user.avatar && ghUser.avatar_url) {
+        user.avatar = ghUser.avatar_url;
+      }
+      user.lastLogin = Date.now();
+      await user.save({ validateBeforeSave: false });
+    } else {
+      user = await User.create({
+        name: ghUser.name || ghUser.login || "GitHub Developer",
+        email: email.toLowerCase(),
+        githubId: String(ghUser.id),
+        githubUsername: ghUser.login || "",
+        avatar: ghUser.avatar_url || "",
+        role: "professional",
+        country: "Nigeria",
+        city: ghUser.location || "Lagos",
+        status: "active",
+        lastLogin: Date.now(),
+      });
+
+      const uniqueSlug = await generateUniqueSlug(user.name);
+      await Profile.create({
+        user: user._id,
+        headline: ghUser.bio || "Open Source Software Engineer",
+        profession: "Software Engineer",
+        country: user.country,
+        city: user.city,
+        passportSlug: uniqueSlug,
+        skills: [
+          { name: "Git", category: "Technical" },
+          { name: "GitHub", category: "Technical" },
+          { name: "Open Source", category: "Technical" },
+        ],
+      });
+    }
+
+    const token = user.getSignedJwtToken();
+    let profile = await Profile.findOne({ user: user._id });
+
+    return res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar,
+        githubUsername: user.githubUsername,
+        country: user.country,
+        city: user.city,
+        profile,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
