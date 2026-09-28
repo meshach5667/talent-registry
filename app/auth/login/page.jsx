@@ -3,15 +3,15 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth, DEMO_ACCOUNTS } from "@/lib/auth-context";
+import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck, ArrowRight, Zap, AlertCircle } from "lucide-react";
+import { ShieldCheck, ArrowRight, AlertCircle } from "lucide-react";
 import { GithubButton } from "@/components/auth/GithubButton";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login, quickDemoLogin, authError } = useAuth();
+  const { login, authError } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,21 +46,6 @@ function LoginForm() {
     }
   };
 
-  const handleDemo = async (key) => {
-    setError("");
-    setLoading(true);
-    try {
-      const user = await quickDemoLogin(key);
-      if (user.role === "admin") router.push("/admin");
-      else if (user.role === "employer") router.push("/organization/dashboard");
-      else router.push("/dashboard");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="flex-1 flex items-center justify-center p-4 py-12 bg-neutral-50/50">
       <div className="w-full max-w-md bg-white border border-neutral-200 rounded-2xl shadow-xl shadow-neutral-900/5 p-6 sm:p-8">
@@ -74,37 +59,6 @@ function LoginForm() {
           <p className="text-xs text-neutral-500 mt-1 max-w-xs">
             Access your verified Professional Passport or Organization portal
           </p>
-        </div>
-
-        {/* 1-Click Demo Accounts Bar */}
-        <div className="mb-5 p-3 bg-neutral-50/80 rounded-xl border border-neutral-200">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-800 mb-2">
-            <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-            <span>Instant Role Evaluation</span>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5">
-            <button
-              type="button"
-              onClick={() => handleDemo("professional")}
-              className="px-2 py-1.5 bg-white border border-neutral-200 hover:border-neutral-400 rounded-lg text-[11px] font-medium text-neutral-800 text-center transition-colors shadow-2xs"
-            >
-              Professional
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDemo("employer")}
-              className="px-2 py-1.5 bg-white border border-neutral-200 hover:border-neutral-400 rounded-lg text-[11px] font-medium text-neutral-800 text-center transition-colors shadow-2xs"
-            >
-              Employer
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDemo("admin")}
-              className="px-2 py-1.5 bg-white border border-neutral-200 hover:border-neutral-400 rounded-lg text-[11px] font-medium text-neutral-800 text-center transition-colors shadow-2xs"
-            >
-              Admin
-            </button>
-          </div>
         </div>
 
         {(error || authError) && (

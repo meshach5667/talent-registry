@@ -1,33 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 
 export function GithubButton({ mode = "login", className = "" }) {
-  const router = useRouter();
-  const { loginWithGithubOAuth, loginWithGithubDemo } = useAuth();
+  const { loginWithGithubOAuth } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleOAuthClick = () => {
-    loginWithGithubOAuth();
-  };
-
-  const handleDemoClick = async (e) => {
-    e.stopPropagation();
     setLoading(true);
-    setError("");
-    try {
-      const user = await loginWithGithubDemo();
-      if (user.role === "admin") router.push("/admin");
-      else if (user.role === "employer") router.push("/organization/dashboard");
-      else router.push("/dashboard");
-    } catch (err) {
-      setError(err.message || "Failed to log in with GitHub demo");
-    } finally {
-      setLoading(false);
-    }
+    loginWithGithubOAuth();
   };
 
   return (
@@ -57,24 +40,13 @@ export function GithubButton({ mode = "login", className = "" }) {
           />
         </svg>
         <span>
-          {mode === "register" ? "Sign up with GitHub" : "Continue with GitHub"}
+          {loading
+            ? "Connecting to GitHub..."
+            : mode === "register"
+            ? "Sign up with GitHub"
+            : "Continue with GitHub"}
         </span>
       </button>
-
-      {/* Instant 1-Click GitHub Test Option for Dev/Demo */}
-      <div className="flex items-center justify-between px-1">
-        <span className="text-[11px] text-neutral-400">
-          No OAuth app configured yet?
-        </span>
-        <button
-          type="button"
-          onClick={handleDemoClick}
-          disabled={loading}
-          className="text-[11px] font-semibold text-emerald-700 hover:text-emerald-800 hover:underline inline-flex items-center gap-1 cursor-pointer"
-        >
-          {loading ? "Authenticating..." : "1-Click GitHub Demo →"}
-        </button>
-      </div>
     </div>
   );
 }

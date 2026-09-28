@@ -50,24 +50,13 @@ export default function VerificationCenterPage() {
               required
               value={tokenInput}
               onChange={(e) => setTokenInput(e.target.value)}
-              placeholder="e.g. demo-verify-token-amina-paystack"
+              placeholder="Enter unique verification token"
               className="flex-1 text-xs px-3.5 py-2.5 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 font-mono transition-all"
             />
             <Button type="submit" size="md">
               Audit Claim
             </Button>
           </form>
-
-          <div className="mt-3 text-[11px] text-neutral-400">
-            Tip: Try the seeded token:{" "}
-            <button
-              type="button"
-              onClick={() => setTokenInput("demo-verify-token-amina-paystack")}
-              className="text-emerald-700 font-semibold underline font-mono cursor-pointer"
-            >
-              demo-verify-token-amina-paystack
-            </button>
-          </div>
         </div>
 
         {/* 3 Step Protocol Cards */}

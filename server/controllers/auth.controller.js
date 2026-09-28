@@ -331,7 +331,7 @@ exports.githubAuth = async (req, res) => {
   if (!clientId) {
     return res.redirect(
       `${clientUrl}/auth/login?error=${encodeURIComponent(
-        "GitHub OAuth is not configured. Please add GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET to .env or use the Quick GitHub Demo."
+        "GitHub OAuth is not configured on the server. Please check server environment variables."
       )}`
     );
   }
@@ -487,66 +487,12 @@ exports.githubCallback = async (req, res, next) => {
   }
 };
 
-// @desc    Direct / Client Exchange for GitHub or Mock Developer Login
+// @desc    Direct / Client Exchange for GitHub OAuth Code
 // @route   POST /api/v1/auth/github/exchange
 // @access  Public
 exports.githubExchange = async (req, res, next) => {
   try {
-    const { code, demo } = req.body;
-
-    // Handle instant mock/demo test login if user requested demo test
-    if (demo) {
-      let demoUser = await User.findOne({ email: "octocat.dev@github.talentregistry.africa" });
-      if (!demoUser) {
-        demoUser = await User.create({
-          name: "Amara Okonkwo (GitHub Pro)",
-          email: "octocat.dev@github.talentregistry.africa",
-          githubId: "gh_8829141",
-          githubUsername: "amara-rust",
-          avatar: "https://avatars.githubusercontent.com/u/583231?v=4",
-          role: "professional",
-          country: "Nigeria",
-          city: "Lagos",
-          status: "active",
-          lastLogin: Date.now(),
-        });
-
-        const slug = await generateUniqueSlug(demoUser.name);
-        await Profile.create({
-          user: demoUser._id,
-          headline: "Distributed Systems Architect & Core Contributor",
-          profession: "Systems Engineer",
-          country: "Nigeria",
-          city: "Lagos",
-          passportSlug: slug,
-          skills: [
-            { name: "Rust", category: "Technical" },
-            { name: "Go", category: "Technical" },
-            { name: "Kubernetes", category: "Technical" },
-            { name: "Distributed Systems", category: "Technical" },
-          ],
-        });
-      }
-
-      const token = demoUser.getSignedJwtToken();
-      const profile = await Profile.findOne({ user: demoUser._id });
-
-      return res.status(200).json({
-        success: true,
-        token,
-        user: {
-          id: demoUser._id,
-          name: demoUser.name,
-          email: demoUser.email,
-          role: demoUser.role,
-          avatar: demoUser.avatar,
-          githubUsername: demoUser.githubUsername,
-          country: demoUser.country,
-          city: demoUser.city,
-          profile,
-        },
-      });
-    }
+    const { code } = req.body;
 
     if (!code) {
       return res.status(400).json({

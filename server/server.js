@@ -26,8 +26,17 @@ const adminRoutes = require("./routes/admin.routes");
 
 const app = express();
 
-// Database Connection
-connectDB();
+// Database Connection Middleware for Serverless & Standalone
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("[Database Connection Error]:", err.message);
+    // Continue so healthcheck or error middleware can handle response
+    next();
+  }
+});
 
 // Security Middlewares
 app.use(
@@ -36,15 +45,37 @@ app.use(
   })
 );
 
-app.use(
-  cors({
-    origin: [
-      process.env.CLIENT_URL || "http://localhost:3000",
-      "http://127.0.0.1:3000",
-    ],
-    credentials: true,
-  })
-);
+// Dynamic & Robust CORS
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (curl, mobile apps, server-to-server)
+    if (!origin) return callback(null, true);
+
+    // Allow configured origins or any Vercel deployment
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.endsWith(".vercel.app") ||
+      /^https:\/\/.*\.vercel\.app$/.test(origin)
+    ) {
+      return callback(null, true);
+    }
+
+    // Default to allowing origin in production if client URL is not strictly locked
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // Logging
 if (process.env.NODE_ENV !== "production") {
@@ -62,7 +93,16 @@ app.use("/api/", apiLimiter);
 const uploadsDir = path.join(__dirname, "../uploads");
 app.use("/uploads", express.static(uploadsDir));
 
-// Healthcheck
+// Healthcheck & Root status
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "Talent Registry API",
+    version: "1.0.0",
+    docs: "/api/health",
+  });
+});
+
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "ok",
@@ -86,17 +126,19 @@ app.use("/api/v1/admin", adminRoutes);
 // Centralized Error Handling
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => {
-  console.log(
-    `[Talent Registry Backend] Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`
-  );
-});
+// Standalone Server Listener (guard for serverless / Vercel execution)
+if (require.main === module && !process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(
+      `[Talent Registry Backend] Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`
+    );
+  });
+}
 
 // Handle unhandled promise rejections
 process.on("unhandledRejection", (err) => {
   console.error(`Unhandled Rejection Error: ${err.message}`);
-  // Keep server alive in dev
 });
 
 module.exports = app;

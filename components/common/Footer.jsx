@@ -90,10 +90,8 @@ export function Footer() {
                 <Lock className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Cryptographic Reference Codes</span>
               </li>
-              <li>
-                <Link href="/admin" className="hover:text-white text-neutral-400 transition-colors">
-                  Admin Console & Audit Trail
-                </Link>
+              <li className="text-neutral-400">
+                <span>Decentralized Reputation Protocol</span>
               </li>
             </ul>
           </div>
