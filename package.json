@@ -10,6 +10,7 @@
     "start": "next start",
     "start:backend": "node server/server.js",
     "seed": "node server/scripts/seed.js",
+    "create-admin": "node server/scripts/create-admin.js",
     "lint": "eslint"
   },
   "dependencies": {
