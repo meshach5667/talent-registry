@@ -5,6 +5,7 @@ const {
   getVerificationByToken,
   submitVerificationDecision,
   getMyVerifications,
+  resendVerification,
 } = require("../controllers/verification.controller");
 const { protect } = require("../middleware/auth.middleware");
 const { verificationValidators } = require("../validators");
@@ -17,13 +18,14 @@ router.post(
   submitVerificationDecision
 );
 
-// Protected routes for requesting and listing
+// Protected routes for requesting, resending and listing
 router.post(
   "/request",
   protect,
   verificationValidators.request,
   requestVerification
 );
+router.post("/:id/resend", protect, resendVerification);
 router.get("/list", protect, getMyVerifications);
 
 module.exports = router;

@@ -8,6 +8,10 @@ const Feedback = require("../models/Feedback");
 const { updateReputationScore } = require("../services/reputation.service");
 const { createNotification } = require("../services/notification.service");
 const { logAudit } = require("../services/audit.service");
+const {
+  sendVerificationEmail,
+  sendVerificationDecisionEmail,
+} = require("../services/email.service");
 
 // @desc    Submit verification request for experience or project
 // @route   POST /api/v1/verifications/request
@@ -119,6 +123,36 @@ exports.requestVerification = async (req, res, next) => {
       });
     }
 
+    // Resolve frontend base URL for verification link
+    const clientUrl =
+      process.env.CLIENT_URL ||
+      (req.get("origin") && !req.get("origin").includes("localhost:5000")
+        ? req.get("origin")
+        : null) ||
+      (process.env.NODE_ENV === "production"
+        ? "https://talent-registry-azure.vercel.app"
+        : "http://localhost:3000");
+    const cleanClientUrl = clientUrl.replace(/\/+$/, "");
+    const fullVerificationUrl = `${cleanClientUrl}/verification/${token}`;
+
+    const itemTitle = targetItem.title || targetItem.role || "Engineering Contributor";
+    const companyOrClient =
+      targetItem.company || targetItem.clientOrCompany || "Organization";
+
+    // Send verification email to the verifier
+    const emailResult = await sendVerificationEmail({
+      verifierEmail: verifierEmail.toLowerCase().trim(),
+      verifierName: verifierName || "",
+      verifierTitle: verifierTitle || "Engineering Lead / Manager",
+      professionalName: req.user.name,
+      professionalEmail: req.user.email,
+      itemType: type,
+      itemTitle,
+      companyOrClient,
+      requestMessage,
+      verificationUrl: fullVerificationUrl,
+    });
+
     await logAudit({
       userId: req.user._id,
       action: "VERIFICATION_REQUESTED",
@@ -129,14 +163,18 @@ exports.requestVerification = async (req, res, next) => {
         type,
         targetItemId: (experienceId || projectId).toString(),
         verifierEmail,
+        emailSent: emailResult?.success ?? false,
       },
     });
 
     res.status(201).json({
       success: true,
-      message: "Verification request dispatched successfully.",
+      message: `Verification request email dispatched to ${verifierEmail.toLowerCase().trim()}.`,
       verification,
       verificationUrl: `/verification/${token}`,
+      fullVerificationUrl,
+      emailSent: emailResult?.success ?? false,
+      previewUrl: emailResult?.previewUrl || null,
     });
   } catch (error) {
     next(error);
@@ -306,6 +344,30 @@ exports.submitVerificationDecision = async (req, res, next) => {
         message: `Your ${verification.type} at ${finalOrgName} has been officially verified by ${finalVerifierName}. A Verified badge was added to your passport.`,
         actionUrl: `/passport/${verification.professional._id}`,
       });
+
+      if (verification.professional?.email) {
+        const clientUrl =
+          process.env.CLIENT_URL ||
+          (process.env.NODE_ENV === "production"
+            ? "https://talent-registry-azure.vercel.app"
+            : "http://localhost:3000");
+        const passportUrl = `${clientUrl.replace(/\/+$/, "")}/passport/${verification.professional._id}`;
+        sendVerificationDecisionEmail({
+          professionalEmail: verification.professional.email,
+          professionalName: verification.professional.name,
+          itemTitle:
+            verification.experience?.title ||
+            verification.project?.title ||
+            "Engineering Claim",
+          companyOrClient: finalOrgName,
+          status: "approved",
+          verifierName: finalVerifierName,
+          responseNotes,
+          passportUrl,
+        }).catch((err) =>
+          console.error("[Decision Email Error]", err.message)
+        );
+      }
     } else {
       // Rejected
       if (verification.type === "experience" && verification.experience) {
@@ -329,6 +391,23 @@ exports.submitVerificationDecision = async (req, res, next) => {
         message: `Your ${verification.type} verification request at ${finalOrgName} was not approved: "${responseNotes || "Details could not be confirmed"}".`,
         actionUrl: "/dashboard",
       });
+
+      if (verification.professional?.email) {
+        sendVerificationDecisionEmail({
+          professionalEmail: verification.professional.email,
+          professionalName: verification.professional.name,
+          itemTitle:
+            verification.experience?.title ||
+            verification.project?.title ||
+            "Engineering Claim",
+          companyOrClient: finalOrgName,
+          status: "rejected",
+          verifierName: finalVerifierName,
+          responseNotes,
+        }).catch((err) =>
+          console.error("[Decision Email Error]", err.message)
+        );
+      }
     }
 
     await logAudit({
@@ -400,3 +479,73 @@ exports.getMyVerifications = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Resend verification email for a pending request
+// @route   POST /api/v1/verifications/:id/resend
+// @access  Private (Professional)
+exports.resendVerification = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const verification = await VerificationRequest.findOne({
+      _id: id,
+      professional: req.user._id,
+    })
+      .populate("experience")
+      .populate("project");
+
+    if (!verification) {
+      return res.status(404).json({
+        success: false,
+        message: "Verification request not found or not owned by you.",
+      });
+    }
+
+    if (verification.status !== "pending") {
+      return res.status(400).json({
+        success: false,
+        message: `Cannot resend. Verification request has already been ${verification.status}.`,
+      });
+    }
+
+    const clientUrl =
+      process.env.CLIENT_URL ||
+      (req.get("origin") && !req.get("origin").includes("localhost:5000")
+        ? req.get("origin")
+        : null) ||
+      (process.env.NODE_ENV === "production"
+        ? "https://talent-registry-azure.vercel.app"
+        : "http://localhost:3000");
+    const cleanClientUrl = clientUrl.replace(/\/+$/, "");
+    const fullVerificationUrl = `${cleanClientUrl}/verification/${verification.token}`;
+
+    const targetItem = verification.experience || verification.project;
+    const itemTitle = targetItem?.title || targetItem?.role || "Engineering Contributor";
+    const companyOrClient =
+      targetItem?.company || targetItem?.clientOrCompany || "Organization";
+
+    const emailResult = await sendVerificationEmail({
+      verifierEmail: verification.verifierEmail,
+      verifierName: verification.verifierName || "",
+      verifierTitle: verification.verifierTitle || "Engineering Lead",
+      professionalName: req.user.name,
+      professionalEmail: req.user.email,
+      itemType: verification.type,
+      itemTitle,
+      companyOrClient,
+      requestMessage: verification.requestMessage,
+      verificationUrl: fullVerificationUrl,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Verification email resent to ${verification.verifierEmail}.`,
+      fullVerificationUrl,
+      emailSent: emailResult?.success ?? false,
+      previewUrl: emailResult?.previewUrl || null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

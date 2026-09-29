@@ -307,6 +307,22 @@ export default function DashboardPage() {
     }
   };
 
+  const [resendingId, setResendingId] = useState(null);
+
+  const handleResendVerification = async (id, targetEmail) => {
+    setResendingId(id);
+    try {
+      const data = await api.resendVerification(id);
+      if (data.success) {
+        alert(`Verification email resent to ${targetEmail}!`);
+      }
+    } catch (err) {
+      alert(err.message || "Failed to resend verification email");
+    } finally {
+      setResendingId(null);
+    }
+  };
+
   // Delete Experience / Project
   const handleDeleteExperience = async (id) => {
     if (!confirm("Are you sure you want to delete this experience record?")) return;
@@ -1019,6 +1035,20 @@ export default function DashboardPage() {
                           {req.status}
                         </Badge>
 
+                        {req.status === "pending" && (
+                          <Button
+                            size="xs"
+                            variant="outline"
+                            onClick={() =>
+                              handleResendVerification(req._id, req.verifierEmail)
+                            }
+                            loading={resendingId === req._id}
+                            className="text-[11px] h-7"
+                          >
+                            Resend Email
+                          </Button>
+                        )}
+
                         <Link
                           href={`/verification/${req.token}`}
                           className="text-[11px] text-emerald-800 underline font-medium"
@@ -1417,14 +1447,31 @@ export default function DashboardPage() {
         {verifResult ? (
           <div className="space-y-4 text-xs">
             <div className="p-4 bg-emerald-50 text-emerald-800 rounded-lg text-center font-semibold">
-              Verification Request Dispatched Successfully!
+              Verification Email Sent Successfully!
             </div>
-            <p className="text-neutral-600">
-              The reviewer can audit your claim directly using this secure link:
+            <p className="text-neutral-700">
+              An official verification email has been dispatched to{" "}
+              <strong className="text-neutral-900 font-mono">{verifierEmail}</strong>.
             </p>
-            <div className="p-2.5 bg-neutral-100 rounded border border-neutral-200 font-mono text-[11px] break-all">
-              {window.location.origin}{verifResult.verificationUrl}
+            <p className="text-neutral-500 text-[11px]">
+              The reviewer can review and approve directly from their email, or using this direct link:
+            </p>
+            <div className="p-2.5 bg-neutral-100 rounded border border-neutral-200 font-mono text-[11px] break-all select-all">
+              {verifResult.fullVerificationUrl || `${window.location.origin}${verifResult.verificationUrl}`}
             </div>
+            {verifResult.previewUrl && (
+              <div className="p-2.5 bg-blue-50 border border-blue-200 rounded text-[11px] text-blue-800">
+                <span className="font-semibold">Dev Preview: </span>
+                <a
+                  href={verifResult.previewUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline font-medium"
+                >
+                  View Sent Email on Ethereal &rarr;
+                </a>
+              </div>
+            )}
             <div className="pt-2 flex justify-end">
               <Button size="sm" onClick={() => setIsRequestVerifOpen(false)}>
                 Done
