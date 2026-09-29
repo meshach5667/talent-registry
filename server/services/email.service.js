@@ -3,35 +3,9 @@ const nodemailer = require("nodemailer");
 let cachedTestAccount = null;
 
 /**
- * Resolve an active email transporter
+ * Helper to get ethereal test transporter
  */
-async function getTransporter() {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER || process.env.EMAIL_USER;
-  const pass =
-    process.env.SMTP_PASS ||
-    process.env.SMTP_PASSWORD ||
-    process.env.EMAIL_PASS;
-
-  // 1. Configured SMTP provider (Gmail, Brevo, Sendgrid, Mailgun, Amazon SES, etc.)
-  if (host || user) {
-    const port = parseInt(process.env.SMTP_PORT || "587", 10);
-    const secure = process.env.SMTP_SECURE === "true" || port === 465;
-    return {
-      transporter: nodemailer.createTransport({
-        host: host || "smtp.gmail.com",
-        port,
-        secure,
-        auth: {
-          user,
-          pass,
-        },
-      }),
-      isTest: false,
-    };
-  }
-
-  // 2. Development / Fallback using Ethereal Email test account
+async function getTestTransporter() {
   if (!cachedTestAccount) {
     try {
       cachedTestAccount = await nodemailer.createTestAccount();
@@ -63,13 +37,61 @@ async function getTransporter() {
 }
 
 /**
+ * Resolve an active email transporter
+ */
+async function getTransporter() {
+  const host = (process.env.SMTP_HOST || "").toLowerCase();
+  const user = process.env.SMTP_USER || process.env.EMAIL_USER;
+  const rawPass =
+    process.env.SMTP_PASS ||
+    process.env.SMTP_PASSWORD ||
+    process.env.EMAIL_PASS;
+  const pass = rawPass ? rawPass.trim().replace(/\s+/g, "") : "";
+
+  // 1. Configured SMTP provider (Gmail, Brevo, Sendgrid, Mailgun, Amazon SES, etc.)
+  if (host || user) {
+    const isGmail = host.includes("gmail") || user?.includes("@gmail.com");
+    const port = parseInt(process.env.SMTP_PORT || "587", 10);
+    const secure = process.env.SMTP_SECURE === "true" || port === 465;
+
+    const transportConfig = isGmail
+      ? {
+          service: "gmail",
+          auth: { user, pass },
+        }
+      : {
+          host: host || "smtp.gmail.com",
+          port,
+          secure,
+          auth: { user, pass },
+        };
+
+    return {
+      transporter: nodemailer.createTransport(transportConfig),
+      isTest: false,
+    };
+  }
+
+  // 2. Development / Fallback using Ethereal Email test account
+  return await getTestTransporter();
+}
+
+/**
  * Send an email via Resend API or SMTP
  */
 async function sendEmail({ to, subject, html, text }) {
-  const from =
+  let from =
     process.env.EMAIL_FROM ||
     process.env.SMTP_FROM ||
     '"Talent Registry" <noreply@talentregistry.africa>';
+
+  const host = (process.env.SMTP_HOST || "").toLowerCase();
+  const user = process.env.SMTP_USER || process.env.EMAIL_USER;
+
+  // Gmail strictly requires From address to match the authenticated Gmail account
+  if ((host.includes("gmail") || user?.includes("@gmail.com")) && user) {
+    from = `"Talent Registry" <${user}>`;
+  }
 
   // Check for Resend API key first
   if (process.env.RESEND_API_KEY) {
@@ -137,9 +159,38 @@ async function sendEmail({ to, subject, html, text }) {
     };
   } catch (error) {
     console.error(`[Email Service Error] Failed to send email to ${to}:`, error.message);
+
+    let friendlyError = error.message;
+    if (error.code === "EAUTH" || error.responseCode === 535) {
+      friendlyError =
+        "Gmail authentication failed (535 BadCredentials). Google requires a 16-character 'Google App Password' generated from your Google Account security settings, not your standard account password.";
+    }
+
+    // Try fallback to Ethereal so user has a working dev preview
+    try {
+      const fallback = await getTestTransporter();
+      if (fallback) {
+        const testInfo = await fallback.transporter.sendMail({
+          from: '"Talent Registry" <noreply@talentregistry.africa>',
+          to,
+          subject,
+          html,
+          text,
+        });
+        const previewUrl = nodemailer.getTestMessageUrl(testInfo);
+        return {
+          success: false,
+          error: friendlyError,
+          previewUrl,
+        };
+      }
+    } catch (e) {
+      // ignore
+    }
+
     return {
       success: false,
-      error: error.message,
+      error: friendlyError,
     };
   }
 }

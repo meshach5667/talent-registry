@@ -1446,15 +1446,34 @@ export default function DashboardPage() {
       >
         {verifResult ? (
           <div className="space-y-4 text-xs">
-            <div className="p-4 bg-emerald-50 text-emerald-800 rounded-lg text-center font-semibold">
-              Verification Email Sent Successfully!
-            </div>
+            {verifResult.emailSent ? (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-center font-semibold">
+                Verification Email Sent Successfully!
+              </div>
+            ) : (
+              <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg space-y-1 text-left">
+                <div className="font-bold">
+                  Verification Request Created (Email Delivery Warning)
+                </div>
+                <div className="text-[11px] text-amber-800">
+                  {verifResult.emailError || "Could not deliver email through SMTP server."}
+                </div>
+              </div>
+            )}
             <p className="text-neutral-700">
-              An official verification email has been dispatched to{" "}
-              <strong className="text-neutral-900 font-mono">{verifierEmail}</strong>.
+              {verifResult.emailSent ? (
+                <>
+                  An official verification email has been dispatched to{" "}
+                  <strong className="text-neutral-900 font-mono">{verifierEmail}</strong>.
+                </>
+              ) : (
+                <>
+                  The claim has been created. You can copy the secure audit link below and share it directly with <strong className="text-neutral-900 font-mono">{verifierEmail}</strong>:
+                </>
+              )}
             </p>
             <p className="text-neutral-500 text-[11px]">
-              The reviewer can review and approve directly from their email, or using this direct link:
+              Direct Verification Audit Link:
             </p>
             <div className="p-2.5 bg-neutral-100 rounded border border-neutral-200 font-mono text-[11px] break-all select-all">
               {verifResult.fullVerificationUrl || `${window.location.origin}${verifResult.verificationUrl}`}

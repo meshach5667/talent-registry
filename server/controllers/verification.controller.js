@@ -169,11 +169,14 @@ exports.requestVerification = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: `Verification request email dispatched to ${verifierEmail.toLowerCase().trim()}.`,
+      message: emailResult?.success
+        ? `Verification request email dispatched to ${verifierEmail.toLowerCase().trim()}.`
+        : `Verification request created. (Email warning: ${emailResult?.error || "SMTP issue"})`,
       verification,
       verificationUrl: `/verification/${token}`,
       fullVerificationUrl,
       emailSent: emailResult?.success ?? false,
+      emailError: emailResult?.error || null,
       previewUrl: emailResult?.previewUrl || null,
     });
   } catch (error) {
@@ -537,11 +540,22 @@ exports.resendVerification = async (req, res, next) => {
       verificationUrl: fullVerificationUrl,
     });
 
+    if (!emailResult?.success) {
+      return res.status(400).json({
+        success: false,
+        message: `Email delivery failed: ${emailResult?.error || "SMTP issue"}`,
+        fullVerificationUrl,
+        emailSent: false,
+        emailError: emailResult?.error || null,
+        previewUrl: emailResult?.previewUrl || null,
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: `Verification email resent to ${verification.verifierEmail}.`,
       fullVerificationUrl,
-      emailSent: emailResult?.success ?? false,
+      emailSent: true,
       previewUrl: emailResult?.previewUrl || null,
     });
   } catch (error) {
