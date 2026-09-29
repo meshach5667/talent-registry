@@ -74,7 +74,7 @@ export default function HomePage() {
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50/90 border border-emerald-300 text-emerald-950 text-xs font-semibold mb-6 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <ShieldCheck className="w-4 h-4 text-emerald-600 stroke-[2.5]" />
-              <span>Pan-African Professional Verification Protocol 2.0</span>
+            
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-neutral-950 tracking-tight leading-[1.1]">
