@@ -19,7 +19,6 @@ Talent Registry Africa is a professional discovery and reputation platform for A
 - Backend: Node.js, Express.js
 - Database: MongoDB with Mongoose ODM
 - Authentication: JSON Web Tokens (JWT) and bcrypt password hashing
-- Media Storage: Local disk storage with optional Cloudinary support
 
 ## Prerequisites
 
