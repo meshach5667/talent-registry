@@ -136,7 +136,7 @@ export default function OrganizationDashboardPage() {
     );
   }
 
-  const { organization, metrics, pendingRequests = [], recentActivity = [] } =
+  const { organization, metrics, teamMembers = [] } =
     dashboardData || {};
 
   return (
@@ -224,121 +224,84 @@ export default function OrganizationDashboardPage() {
         {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-white p-5 rounded-xl border border-neutral-200 shadow-xs">
-            <div className="text-2xl font-bold text-amber-600">
-              {metrics?.pendingRequestsCount || 0}
+            <div className="text-2xl font-bold text-neutral-900">
+              {teamMembers.length}
             </div>
             <div className="text-xs text-neutral-500 font-medium mt-1 uppercase tracking-wider">
-              Pending Verifications to Review
+              Associated Talent & Alumni
             </div>
           </div>
 
           <div className="bg-white p-5 rounded-xl border border-neutral-200 shadow-xs">
             <div className="text-2xl font-bold text-emerald-700">
-              {metrics?.verifiedEmployeesCount || 0}
+              {organization?.verified ? "Verified" : "Active"}
             </div>
             <div className="text-xs text-neutral-500 font-medium mt-1 uppercase tracking-wider">
-              Certified Technical Alumni
+              Organization Status
             </div>
           </div>
 
           <div className="bg-white p-5 rounded-xl border border-neutral-200 shadow-xs">
             <div className="text-2xl font-bold text-neutral-900">
-              {metrics?.totalVerificationsReviewed || 0}
+              Direct
             </div>
             <div className="text-xs text-neutral-500 font-medium mt-1 uppercase tracking-wider">
-              Total Audits Completed
+              Talent Discovery Network
             </div>
           </div>
         </div>
 
-        {/* Pending Verification Claims Queue */}
+        {/* Associated Engineers & Alumni */}
         <div className="bg-white rounded-xl border border-neutral-200 p-6 shadow-xs space-y-4">
           <div className="border-b border-neutral-100 pb-3 flex items-center justify-between">
             <div>
               <h2 className="text-base font-bold text-neutral-900">
-                Incoming Employee Verification Queue
+                Associated Engineers & Technical Alumni
               </h2>
               <p className="text-xs text-neutral-500">
-                Review and certify experience and project claims from engineers.
+                Professionals who have recorded work experience with {organization?.name}.
               </p>
             </div>
-            <Badge variant="pending">{pendingRequests.length} pending</Badge>
+            <Badge variant="outline">{teamMembers.length} Members</Badge>
           </div>
 
-          {pendingRequests.length === 0 ? (
+          {teamMembers.length === 0 ? (
             <p className="text-xs text-neutral-500 py-6 text-center">
-              No pending verification claims awaiting your review.
+              No engineers have recorded work history with this organization yet.
             </p>
           ) : (
             <div className="divide-y divide-neutral-100 text-xs">
-              {pendingRequests.map((req) => (
+              {teamMembers.map((item) => (
                 <div
-                  key={req._id}
+                  key={item._id}
                   className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
                   <div className="flex items-start gap-3">
                     <Avatar
-                      src={req.professional?.avatar}
-                      name={req.professional?.name}
+                      src={item.user?.avatar}
+                      name={item.user?.name}
                       size="md"
                     />
                     <div className="space-y-1">
                       <div className="font-bold text-neutral-900 text-sm">
-                        {req.professional?.name}
+                        {item.user?.name}
                       </div>
                       <div className="text-neutral-700 font-medium">
-                        Claimed {req.type === "experience" ? "Role" : "Project"}:{" "}
-                        <span className="font-semibold">
-                          {req.experience?.title || req.project?.title}
-                        </span>
+                        {item.title}
                       </div>
                       <div className="text-[11px] text-neutral-500">
-                        {req.professional?.email} • {req.professional?.city},{" "}
-                        {req.professional?.country}
+                        {item.startDate ? formatDate(item.startDate) : ""} –{" "}
+                        {item.isCurrent ? "Present" : item.endDate ? formatDate(item.endDate) : ""}
+                        {item.user?.city && ` • ${item.user.city}, ${item.user.country}`}
                       </div>
                     </div>
                   </div>
 
-                  <Link href={`/verification/${req.token}`}>
-                    <Button size="sm" className="bg-emerald-700 hover:bg-emerald-800 text-white">
-                      Review & Audit Claim →
+                  <Link href={`/passport/${item.user?._id}`}>
+                    <Button size="sm" variant="outline" className="text-xs">
+                      View Passport →
                     </Button>
                   </Link>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Recent Audit Activity */}
-        <div className="bg-white rounded-xl border border-neutral-200 p-6 shadow-xs space-y-4">
-          <h2 className="text-base font-bold text-neutral-900 border-b border-neutral-100 pb-3">
-            Recent Audit & Verification History
-          </h2>
-
-          {recentActivity.length === 0 ? (
-            <p className="text-xs text-neutral-500 py-4 text-center">
-              No past verification reviews yet.
-            </p>
-          ) : (
-            <div className="divide-y divide-neutral-100 text-xs">
-              {recentActivity.map((item) => (
-                <div key={item._id} className="py-3 flex items-center justify-between">
-                  <div>
-                    <span className="font-semibold text-neutral-900">
-                      {item.professional?.name}
-                    </span>{" "}
-                    – {item.experience?.title || item.project?.title}
-                    <div className="text-[11px] text-neutral-400">
-                      Processed on {new Date(item.updatedAt).toLocaleDateString()}
-                    </div>
-                  </div>
-
-                  <Badge
-                    variant={item.status === "approved" ? "verified" : "rejected"}
-                  >
-                    {item.status}
-                  </Badge>
                 </div>
               ))}
             </div>

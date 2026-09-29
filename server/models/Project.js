@@ -58,34 +58,13 @@ const ProjectSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    verificationStatus: {
-      type: String,
-      enum: ["unverified", "pending", "verified", "rejected"],
-      default: "unverified",
-    },
-    verifiedBy: {
-      verifierUser: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-      verifierName: String,
-      verifierEmail: String,
-      verifierRole: String,
-      verifierOrganization: String,
-      verifiedAt: Date,
-      verificationNotes: String,
-      verificationReferenceCode: String,
-    },
-    rejectionReason: {
-      type: String,
-    },
   },
   {
     timestamps: true,
   }
 );
 
-ProjectSchema.index({ user: 1, verificationStatus: 1 });
+ProjectSchema.index({ user: 1, startDate: -1 });
 
 module.exports =
   mongoose.models.Project || mongoose.model("Project", ProjectSchema);

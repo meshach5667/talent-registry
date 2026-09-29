@@ -19,9 +19,9 @@ export function Footer() {
               “Don’t just claim your experience. Prove it.”
             </p>
             <p className="text-neutral-500 text-[11px] leading-relaxed">
-              Institutional verification network bridging African technical
-              excellence with global opportunities through cryptographically
-              verifiable work histories.
+              Professional talent registry bridging African technical
+              excellence with global opportunities through showcase portfolios,
+              work history, and client endorsements.
             </p>
           </div>
 
@@ -38,12 +38,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/organizations" className="hover:text-white transition-colors">
-                  Verified African Organizations
-                </Link>
-              </li>
-              <li>
-                <Link href="/verification" className="hover:text-white transition-colors">
-                  Verification Protocol Center
+                  African Organizations
                 </Link>
               </li>
               <li>
@@ -53,7 +48,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/auth/register" className="hover:text-white transition-colors">
-                  Issue Your Passport
+                  Create Your Passport
                 </Link>
               </li>
             </ul>
@@ -84,14 +79,15 @@ export function Footer() {
             <ul className="space-y-2 text-neutral-400">
               <li className="flex items-center gap-1.5 text-neutral-300">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Zero Self-Attested Falsehoods</span>
+                <span>Direct Work History & Portfolio</span>
               </li>
               <li className="flex items-center gap-1.5 text-neutral-300">
-                <Lock className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Cryptographic Reference Codes</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Audited Client Ratings & Feedback</span>
               </li>
-              <li className="text-neutral-400">
-                <span>Decentralized Reputation Protocol</span>
+              <li className="flex items-center gap-1.5 text-neutral-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Transparent Reputation Index</span>
               </li>
             </ul>
           </div>

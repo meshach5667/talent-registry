@@ -94,7 +94,6 @@ export function Navbar() {
   const navLinks = [
     { href: "/talent", label: "Talent Discovery", icon: Search },
     { href: "/organizations", label: "Organizations", icon: Building2 },
-    { href: "/verification", label: "Verification Protocol", icon: ShieldCheck },
   ];
 
   return (
@@ -111,7 +110,7 @@ export function Navbar() {
                 Talent Registry
               </span>
               <span className="text-[9.5px] text-neutral-500 font-mono tracking-wider uppercase -mt-1 flex items-center gap-1">
-                <span>Verified Africa</span>
+                <span>Pan-African Network</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
               </span>
             </div>

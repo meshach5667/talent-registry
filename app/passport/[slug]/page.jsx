@@ -7,7 +7,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Badge, VerifiedBadge, UnverifiedBadge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
 import { formatDate, calculateDuration } from "@/lib/utils";
 import {
@@ -24,7 +24,6 @@ import {
   AlertTriangle,
   Globe,
   Award,
-  Lock,
   Clock,
   Sparkles,
   Check,
@@ -162,7 +161,7 @@ export default function ProfessionalPassportPage() {
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-neutral-900 border-t-transparent rounded-full animate-spin" />
           <span className="text-xs text-neutral-500 font-medium">
-            Verifying cryptographic credentials...
+            Loading professional passport...
           </span>
         </div>
       </div>
@@ -179,10 +178,10 @@ export default function ProfessionalPassportPage() {
           Professional Passport Not Found
         </h2>
         <p className="text-xs text-neutral-500 mt-1 max-w-sm">
-          The requested verified passport could not be located on the registry.
+          The requested passport could not be located on the registry.
         </p>
         <Link href="/talent" className="mt-4">
-          <Button size="sm">Browse Verified Directory</Button>
+          <Button size="sm">Browse Talent Directory</Button>
         </Link>
       </div>
     );
@@ -192,9 +191,6 @@ export default function ProfessionalPassportPage() {
   const pUser = profile.user || {};
   const rep = profile.reputation || {};
 
-  const verifiedExperiences = experiences.filter((e) => e.verificationStatus === "verified");
-  const unverifiedExperiences = experiences.filter((e) => e.verificationStatus !== "verified");
-
   return (
     <div className="flex-1 bg-neutral-50/40 py-8 sm:py-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
@@ -202,7 +198,7 @@ export default function ProfessionalPassportPage() {
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2 text-neutral-500">
             <span className="font-mono uppercase tracking-wider text-[10px] bg-neutral-200 text-neutral-800 px-2 py-0.5 rounded font-semibold">
-              OFFICIAL PASSPORT
+              PROFESSIONAL PASSPORT
             </span>
             <span>•</span>
             <span className="font-mono text-neutral-600">
@@ -258,7 +254,9 @@ export default function ProfessionalPassportPage() {
                   <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight">
                     {pUser.name}
                   </h1>
-                  <VerifiedBadge label="Identity & Experience Verified" />
+                  <Badge variant="outline" className="font-semibold text-neutral-700">
+                    Professional
+                  </Badge>
                   {pUser.githubUsername && (
                     <a
                       href={`https://github.com/${pUser.githubUsername}`}
@@ -396,13 +394,13 @@ export default function ProfessionalPassportPage() {
           )}
         </div>
 
-        {/* 2. Verification Index & Trust Rating Card */}
+        {/* 2. Reputation Index Card */}
         <div className="bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900 text-white rounded-2xl p-6 sm:p-8 shadow-md border border-neutral-800">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-1">
                 <ShieldCheck className="w-4 h-4 stroke-[2.5]" />
-                <span>Audited Reputation Index</span>
+                <span>Reputation Index</span>
               </div>
               <div className="flex items-baseline gap-3">
                 <span className="text-4xl sm:text-5xl font-extrabold tracking-tight">
@@ -413,12 +411,11 @@ export default function ProfessionalPassportPage() {
                   variant={rep.score >= 80 ? "elite" : "pro"}
                   className="bg-emerald-950 text-emerald-300 border-emerald-800 text-xs ml-2 uppercase font-semibold"
                 >
-                  {rep.tier || "Verified Pro"}
+                  {rep.tier || "Professional"}
                 </Badge>
               </div>
               <p className="text-neutral-400 text-xs mt-2 max-w-md">
-                Score dynamically calculated from employer-verified work history,
-                technical deliverables, peer review endorsements, and reliability index.
+                Score dynamically calculated from completed jobs, client ratings, confirmed engagements, and platform activity.
               </p>
             </div>
 
@@ -426,19 +423,19 @@ export default function ProfessionalPassportPage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 border-t md:border-t-0 md:border-l border-neutral-800 pt-4 md:pt-0 md:pl-6">
               <div>
                 <div className="text-2xl font-bold text-white">
-                  {rep.verifiedExperienceCount || verifiedExperiences.length}
+                  {rep.completedJobs || 0}
                 </div>
                 <div className="text-[11px] text-neutral-400 uppercase tracking-wider mt-0.5">
-                  Verified Roles
+                  Completed Jobs
                 </div>
               </div>
 
               <div>
                 <div className="text-2xl font-bold text-white">
-                  {rep.verifiedProjectCount || projects.filter((p) => p.verificationStatus === "verified").length}
+                  {rep.feedbackCount || feedbacks.length}
                 </div>
                 <div className="text-[11px] text-neutral-400 uppercase tracking-wider mt-0.5">
-                  Audited Projects
+                  Client Reviews
                 </div>
               </div>
 
@@ -464,182 +461,120 @@ export default function ProfessionalPassportPage() {
           </div>
         </div>
 
-        {/* 3. Verified Skills & Technologies */}
+        {/* 3. Skills & Technologies */}
         {profile.skills && profile.skills.length > 0 && (
           <div className="bg-white rounded-2xl border border-neutral-200/90 p-6 sm:p-8 shadow-xs">
             <h2 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-4">
-              Core Competencies & Verified Technologies
+              Core Competencies & Technologies
             </h2>
             <div className="flex flex-wrap gap-2">
               {profile.skills.map((s, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-neutral-50 border border-neutral-200 text-xs text-neutral-800 font-medium"
+                  className="px-3 py-1.5 rounded-lg bg-neutral-50 border border-neutral-200 text-xs text-neutral-800 font-medium"
                 >
                   <span>{s.name || s}</span>
-                  {s.verifiedCount > 0 && (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-semibold">
-                      <ShieldCheck className="w-2.5 h-2.5 text-emerald-700" />
-                      {s.verifiedCount} verified
-                    </span>
-                  )}
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* 4. Verified Work History (Key Requirement: Clearly distinguish Verified from Self-Reported) */}
+        {/* 4. Work History */}
         <div className="bg-white rounded-2xl border border-neutral-200/90 p-6 sm:p-8 shadow-xs space-y-6">
           <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
             <div>
               <h2 className="text-lg font-bold text-neutral-900 tracking-tight">
-                Work Experience
+                Work History
               </h2>
               <p className="text-xs text-neutral-500">
-                Peer and employer-audited employment history
+                Career experience and professional background
               </p>
-            </div>
-            <div className="flex items-center gap-3 text-xs">
-              <span className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                Verified
-              </span>
-              <span className="flex items-center gap-1.5 text-neutral-500">
-                <span className="w-2 h-2 rounded-full bg-neutral-400" />
-                Self-Reported
-              </span>
             </div>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-6">
             {experiences.length === 0 ? (
-              <p className="text-xs text-neutral-500 py-4">No experiences recorded yet.</p>
+              <p className="text-xs text-neutral-500 py-4">No work history recorded yet.</p>
             ) : (
-              experiences.map((exp) => {
-                const isVerified = exp.verificationStatus === "verified";
-                const isPending = exp.verificationStatus === "pending";
-
-                return (
-                  <div
-                    key={exp._id}
-                    className={`rounded-xl p-5 border transition-all ${
-                      isVerified
-                        ? "border-emerald-200 bg-emerald-50/20"
-                        : isPending
-                        ? "border-amber-200 bg-amber-50/20"
-                        : "border-neutral-200 bg-neutral-50/30"
-                    }`}
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
-                      <div>
-                        <h3 className="text-base font-bold text-neutral-950">
-                          {exp.title}
-                        </h3>
-                        <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-neutral-800 mt-0.5">
-                          <span className="flex items-center gap-1">
-                            <Building2 className="w-3.5 h-3.5 text-neutral-400" />
-                            {exp.company}
-                          </span>
-                          <span>•</span>
-                          <span className="text-neutral-500 font-normal">
-                            {exp.location} ({exp.locationType || "remote"})
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="shrink-0">
-                        {isVerified ? (
-                          <VerifiedBadge label="Verified Experience" />
-                        ) : isPending ? (
-                          <Badge variant="pending">Verification Pending</Badge>
-                        ) : (
-                          <UnverifiedBadge label="Self-Reported" />
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="text-xs text-neutral-500 flex items-center gap-2 mb-3">
-                      <Calendar className="w-3.5 h-3.5 text-neutral-400" />
-                      <span>
-                        {formatDate(exp.startDate)} –{" "}
-                        {exp.isCurrent ? "Present" : formatDate(exp.endDate)}
-                      </span>
-                      <span>•</span>
-                      <span>
-                        {calculateDuration(exp.startDate, exp.endDate, exp.isCurrent)}
-                      </span>
-                    </div>
-
-                    {exp.description && (
-                      <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed mb-4">
-                        {exp.description}
-                      </p>
-                    )}
-
-                    {exp.skillsUsed && exp.skillsUsed.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {exp.skillsUsed.map((sk, idx) => (
-                          <span
-                            key={idx}
-                            className="text-[11px] px-2 py-0.5 rounded bg-white border border-neutral-200 text-neutral-700"
-                          >
-                            {sk}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Cryptographic Verification Proof Box */}
-                    {isVerified && exp.verifiedBy && (
-                      <div className="mt-4 p-3.5 bg-white rounded-lg border border-emerald-200 text-xs space-y-2">
-                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-100 pb-2">
-                          <div className="flex items-center gap-2 font-semibold text-emerald-900">
-                            <Lock className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>
-                              Verified by {exp.verifiedBy.verifierName} (
-                              {exp.verifiedBy.verifierRole} at{" "}
-                              {exp.verifiedBy.verifierOrganization})
+              experiences.map((exp) => (
+                <div
+                  key={exp._id}
+                  className="rounded-xl p-5 border border-neutral-200 bg-neutral-50/30 transition-all space-y-3"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                    <div>
+                      <h3 className="text-base font-bold text-neutral-950">
+                        {exp.title}
+                      </h3>
+                      <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-neutral-800 mt-0.5">
+                        <span className="flex items-center gap-1">
+                          <Building2 className="w-3.5 h-3.5 text-neutral-400" />
+                          {exp.company}
+                        </span>
+                        {exp.location && (
+                          <>
+                            <span>•</span>
+                            <span className="text-neutral-500 font-normal">
+                              {exp.location} {exp.locationType ? `(${exp.locationType})` : ""}
                             </span>
-                          </div>
-                          <span className="text-[10px] text-neutral-400 font-mono">
-                            Ref: {exp.verifiedBy.verificationReferenceCode || "VER-EXP-2026"}
-                          </span>
-                        </div>
-
-                        {exp.verifiedBy.verificationNotes && (
-                          <p className="text-xs text-neutral-700 italic">
-                            “{exp.verifiedBy.verificationNotes}”
-                          </p>
+                          </>
                         )}
-
-                        <div className="text-[10px] text-neutral-400 flex items-center justify-between">
-                          <span>
-                            Audit confirmed on:{" "}
-                            {exp.verifiedBy.verifiedAt
-                              ? new Date(exp.verifiedBy.verifiedAt).toLocaleDateString()
-                              : "Recent"}
-                          </span>
-                          <button
-                            onClick={() => {
-                              setDisputeTarget({ type: "experience", id: exp._id });
-                              setIsDisputeOpen(true);
-                            }}
-                            className="text-neutral-400 hover:text-neutral-600 underline"
-                          >
-                            Contest this verification
-                          </button>
-                        </div>
                       </div>
-                    )}
+                    </div>
                   </div>
-                );
-              })
+
+                  <div className="text-xs text-neutral-500 flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5 text-neutral-400" />
+                    <span>
+                      {formatDate(exp.startDate)} –{" "}
+                      {exp.isCurrent ? "Present" : formatDate(exp.endDate)}
+                    </span>
+                    <span>•</span>
+                    <span>
+                      {calculateDuration(exp.startDate, exp.endDate, exp.isCurrent)}
+                    </span>
+                  </div>
+
+                  {exp.description && (
+                    <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed">
+                      {exp.description}
+                    </p>
+                  )}
+
+                  {exp.skillsUsed && exp.skillsUsed.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {exp.skillsUsed.map((sk, idx) => (
+                        <span
+                          key={idx}
+                          className="text-[11px] px-2 py-0.5 rounded bg-white border border-neutral-200 text-neutral-700"
+                        >
+                          {sk}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {(exp.projectUrl || exp.link) && (
+                    <div className="pt-2">
+                      <a
+                        href={exp.projectUrl || exp.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-emerald-700 hover:text-emerald-900 font-medium hover:underline"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        <span>View Project / Portfolio Link</span>
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ))
             )}
           </div>
         </div>
 
-        {/* 5. Verified Projects */}
+        {/* 5. Projects & Deliverables */}
         <div className="bg-white rounded-2xl border border-neutral-200/90 p-6 sm:p-8 shadow-xs space-y-6">
           <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
             <div>
@@ -647,7 +582,7 @@ export default function ProfessionalPassportPage() {
                 Key Technical Deliverables & Projects
               </h2>
               <p className="text-xs text-neutral-500">
-                Audited production systems and measurable results
+                Production systems, client work, and key accomplishments
               </p>
             </div>
           </div>
@@ -656,79 +591,75 @@ export default function ProfessionalPassportPage() {
             {projects.length === 0 ? (
               <p className="text-xs text-neutral-500 col-span-2">No projects documented yet.</p>
             ) : (
-              projects.map((proj) => {
-                const isVerified = proj.verificationStatus === "verified";
-                return (
-                  <div
-                    key={proj._id}
-                    className={`rounded-xl p-5 border flex flex-col justify-between ${
-                      isVerified
-                        ? "border-emerald-200 bg-emerald-50/15"
-                        : "border-neutral-200 bg-white"
-                    }`}
-                  >
-                    <div>
-                      <div className="flex items-start justify-between gap-2 mb-2">
-                        <h3 className="font-bold text-neutral-900 text-sm">
-                          {proj.title}
-                        </h3>
-                        {isVerified ? (
-                          <VerifiedBadge label="Verified" className="py-0 text-[10px]" />
-                        ) : (
-                          <UnverifiedBadge label="Self-Reported" className="py-0 text-[10px]" />
-                        )}
-                      </div>
-
-                      <div className="text-xs text-neutral-500 mb-2">
-                        Role: <span className="font-medium text-neutral-800">{proj.role}</span>
-                        {proj.clientOrCompany && ` • ${proj.clientOrCompany}`}
-                      </div>
-
-                      <p className="text-xs text-neutral-700 leading-relaxed mb-3">
-                        {proj.description}
-                      </p>
-
-                      {proj.metrics && (
-                        <div className="mb-3 px-2.5 py-1.5 rounded bg-neutral-100 border border-neutral-200 text-xs font-mono text-neutral-800">
-                          ⚡ <span className="font-semibold">{proj.metrics}</span>
-                        </div>
-                      )}
-
-                      {proj.technologies && proj.technologies.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mb-4">
-                          {proj.technologies.map((t, idx) => (
-                            <span
-                              key={idx}
-                              className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-700 border border-neutral-200"
-                            >
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+              projects.map((proj) => (
+                <div
+                  key={proj._id}
+                  className="rounded-xl p-5 border border-neutral-200 bg-white flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <h3 className="font-bold text-neutral-900 text-sm">
+                        {proj.title}
+                      </h3>
                     </div>
 
-                    {isVerified && proj.verifiedBy && (
-                      <div className="mt-3 pt-3 border-t border-emerald-100 text-[11px] text-emerald-950 font-medium">
-                        Verified by {proj.verifiedBy.verifierName} ({proj.verifiedBy.verifierOrganization})
+                    <div className="text-xs text-neutral-500 mb-2">
+                      Role: <span className="font-medium text-neutral-800">{proj.role}</span>
+                      {proj.clientOrCompany && ` • ${proj.clientOrCompany}`}
+                    </div>
+
+                    <p className="text-xs text-neutral-700 leading-relaxed mb-3">
+                      {proj.description}
+                    </p>
+
+                    {proj.metrics && (
+                      <div className="mb-3 px-2.5 py-1.5 rounded bg-neutral-100 border border-neutral-200 text-xs font-mono text-neutral-800">
+                        ⚡ <span className="font-semibold">{proj.metrics}</span>
+                      </div>
+                    )}
+
+                    {proj.technologies && proj.technologies.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-4">
+                        {proj.technologies.map((t, idx) => (
+                          <span
+                            key={idx}
+                            className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-700 border border-neutral-200"
+                          >
+                            {t}
+                          </span>
+                        ))}
                       </div>
                     )}
                   </div>
-                );
-              })
+
+                  {(proj.projectUrl || proj.link) && (
+                    <div className="pt-2 border-t border-neutral-100">
+                      <a
+                        href={proj.projectUrl || proj.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-emerald-700 hover:text-emerald-900 font-medium hover:underline"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        <span>View Project</span>
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ))
             )}
           </div>
         </div>
 
-        {/* 6. Client & Employer Verified Endorsements */}
+        {/* 6. Client Endorsements */}
         <div className="bg-white rounded-2xl border border-neutral-200/90 p-6 sm:p-8 shadow-xs space-y-6">
           <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
             <div>
               <h2 className="text-lg font-bold text-neutral-900 tracking-tight">
-                Verified Client & Employer Endorsements
+                Client & Colleague Endorsements
               </h2>
               <p className="text-xs text-neutral-500">
-                Audited feedback from managers and organizational leads
+                Audited feedback from managers, clients, and organizational leads
               </p>
             </div>
             <div className="flex items-center gap-1 text-sm font-bold text-neutral-900">
@@ -815,11 +746,6 @@ export default function ProfessionalPassportPage() {
                     </div>
                     <div className="text-[11px] text-neutral-500">
                       {edu.startYear} – {edu.endYear || "Present"}
-                      {edu.verified && (
-                        <span className="ml-2 text-emerald-700 font-semibold">
-                          • Verified
-                        </span>
-                      )}
                     </div>
                   </div>
                 ))}
@@ -854,8 +780,7 @@ export default function ProfessionalPassportPage() {
 
         {/* 8. Footer Protocol Banner */}
         <div className="p-4 bg-neutral-100 rounded-xl border border-neutral-200 text-center text-xs text-neutral-500">
-          This passport is cryptographically signed and maintained by the Talent Registry Pan-African Network.
-          Every verified claim is backed by audited employer verification tokens.
+          This passport is verified and maintained by the Talent Registry Pan-African Network. Connecting vetted professionals with world-class opportunities.
         </div>
       </div>
 
@@ -864,7 +789,7 @@ export default function ProfessionalPassportPage() {
         isOpen={isContactOpen}
         onClose={() => setIsContactOpen(false)}
         title={`Contact / Inquire: ${pUser.name}`}
-        description="Send a direct hiring inquiry or consulting proposal to this verified professional."
+        description="Send a direct hiring inquiry or consulting proposal to this professional."
       >
         {contactSuccess ? (
           <div className="p-4 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-semibold text-center">
@@ -953,7 +878,7 @@ export default function ProfessionalPassportPage() {
         isOpen={isDisputeOpen}
         onClose={() => setIsDisputeOpen(false)}
         title="File Registry Integrity Report"
-        description="If you believe a claim or verification on this passport is fraudulent or inaccurate, submit an inquiry to our audit committee."
+        description="If you believe a claim or information on this passport is fraudulent or inaccurate, submit an inquiry to our review team."
       >
         {disputeSuccess ? (
           <div className="p-4 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-semibold text-center">
@@ -974,7 +899,6 @@ export default function ProfessionalPassportPage() {
                 <option value="Fraudulent Experience">Fraudulent Experience Record</option>
                 <option value="Fabricated Project">Fabricated Project Deliverable</option>
                 <option value="Impersonation">Impersonation</option>
-                <option value="Inaccurate Verification">Inaccurate Verification</option>
                 <option value="Other">Other Violation</option>
               </select>
             </div>

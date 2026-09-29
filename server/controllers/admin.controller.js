@@ -3,7 +3,7 @@ const Profile = require("../models/Profile");
 const Organization = require("../models/Organization");
 const Experience = require("../models/Experience");
 const Project = require("../models/Project");
-const VerificationRequest = require("../models/VerificationRequest");
+const Feedback = require("../models/Feedback");
 const AuditLog = require("../models/AuditLog");
 const Dispute = require("../models/Dispute");
 const { createNotification } = require("../services/notification.service");
@@ -20,9 +20,9 @@ exports.getAdminOverview = async (req, res, next) => {
     const totalOrganizations = await Organization.countDocuments();
     const verifiedOrganizations = await Organization.countDocuments({ verified: true });
     
-    const totalVerifications = await VerificationRequest.countDocuments();
-    const pendingVerifications = await VerificationRequest.countDocuments({ status: "pending" });
-    const approvedVerifications = await VerificationRequest.countDocuments({ status: "approved" });
+    const totalExperiences = await Experience.countDocuments();
+    const totalProjects = await Project.countDocuments();
+    const totalFeedbacks = await Feedback.countDocuments();
 
     const openDisputes = await Dispute.countDocuments({ status: "open" });
 
@@ -39,9 +39,9 @@ exports.getAdminOverview = async (req, res, next) => {
         employersCount,
         totalOrganizations,
         verifiedOrganizations,
-        totalVerifications,
-        pendingVerifications,
-        approvedVerifications,
+        totalExperiences,
+        totalProjects,
+        totalFeedbacks,
         openDisputes,
       },
       recentLogs,

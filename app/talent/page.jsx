@@ -7,7 +7,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Badge, VerifiedBadge, TrustScoreBadge } from "@/components/ui/badge";
+import { Badge, TrustScoreBadge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
 import {
   Search,
@@ -37,9 +37,6 @@ function TalentSearchContent() {
   const [profession, setProfession] = useState(searchParams.get("profession") || "All");
   const [skill, setSkill] = useState(searchParams.get("skill") || "All");
   const [minScore, setMinScore] = useState(searchParams.get("minScore") || 0);
-  const [verifiedOnly, setVerifiedOnly] = useState(
-    searchParams.get("verifiedOnly") !== "false"
-  );
   const [sortBy, setSortBy] = useState("score_desc");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -100,7 +97,6 @@ function TalentSearchContent() {
         profession: profession !== "All" ? profession : undefined,
         skill: skill !== "All" ? skill : undefined,
         minScore: minScore > 0 ? minScore : undefined,
-        verifiedOnly: verifiedOnly ? "true" : "false",
         sort: sortBy,
         page,
         limit: 9,
@@ -121,7 +117,7 @@ function TalentSearchContent() {
 
   useEffect(() => {
     fetchProfiles();
-  }, [country, profession, skill, minScore, verifiedOnly, sortBy, page]);
+  }, [country, profession, skill, minScore, sortBy, page]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -135,7 +131,6 @@ function TalentSearchContent() {
     setProfession("All");
     setSkill("All");
     setMinScore(0);
-    setVerifiedOnly(true);
     setSortBy("score_desc");
     setPage(1);
   };
@@ -185,18 +180,18 @@ function TalentSearchContent() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 pb-5">
           <div>
             <div className="text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-1">
-              Verified Discovery Network
+              Professional Discovery Network
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight">
               African Technical Talent Registry
             </h1>
             <p className="text-xs text-neutral-600 mt-1">
-              Search and filter candidates by audited employer records, verified projects, and trust scores.
+              Search and filter candidates by technical stack, experience, client ratings, and platform reputation.
             </p>
           </div>
 
           <div className="text-xs font-mono text-neutral-500">
-            Showing <span className="font-semibold text-neutral-900">{total}</span> verified candidates
+            Showing <span className="font-semibold text-neutral-900">{total}</span> candidates
           </div>
         </div>
 
@@ -321,24 +316,8 @@ function TalentSearchContent() {
             </div>
           </div>
 
-          {/* Toggle verified only & Reset */}
-          <div className="flex flex-wrap items-center justify-between pt-2 border-t border-neutral-100 text-xs">
-            <label className="flex items-center gap-2 cursor-pointer font-medium text-neutral-800 select-none">
-              <input
-                type="checkbox"
-                checked={verifiedOnly}
-                onChange={(e) => {
-                  setVerifiedOnly(e.target.checked);
-                  setPage(1);
-                }}
-                className="w-4 h-4 accent-emerald-600 rounded"
-              />
-              <span className="flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                Show Only Candidates with Verified Work Experience
-              </span>
-            </label>
-
+          {/* Reset Filters */}
+          <div className="flex justify-end pt-2 border-t border-neutral-100 text-xs">
             <button
               onClick={handleResetFilters}
               className="text-neutral-500 hover:text-neutral-900 underline text-xs"
@@ -352,7 +331,7 @@ function TalentSearchContent() {
         {loading ? (
           <div className="py-20 text-center text-xs text-neutral-500 flex flex-col items-center gap-3">
             <div className="w-7 h-7 border-2 border-neutral-900 border-t-transparent rounded-full animate-spin" />
-            <span>Filtering audited registries...</span>
+            <span>Loading talent directory...</span>
           </div>
         ) : profiles.length === 0 ? (
           <div className="py-16 text-center bg-white rounded-xl border border-neutral-200 p-8 space-y-3">
@@ -360,11 +339,10 @@ function TalentSearchContent() {
               <Search className="w-6 h-6" />
             </div>
             <h3 className="text-base font-bold text-neutral-900">
-              No matching verified professionals found
+              No matching professionals found
             </h3>
             <p className="text-xs text-neutral-500 max-w-sm mx-auto">
-              Try broadening your filter criteria or unchecking the verified-only
-              checkbox.
+              Try broadening your filter criteria or adjusting your search terms.
             </p>
             <Button variant="outline" size="sm" onClick={handleResetFilters}>
               Clear Filters
@@ -375,7 +353,6 @@ function TalentSearchContent() {
             {profiles.map((item) => {
               const u = item.user || {};
               const rep = item.reputation || {};
-              const verifiedRoles = rep.verifiedExperienceCount || 0;
 
               return (
                 <div
@@ -393,11 +370,8 @@ function TalentSearchContent() {
                           className="border border-neutral-200"
                         />
                         <div>
-                          <h3 className="font-bold text-neutral-950 text-sm flex items-center gap-1.5">
+                          <h3 className="font-bold text-neutral-950 text-sm">
                             {u.name}
-                            {verifiedRoles > 0 && (
-                              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                            )}
                           </h3>
                           <div className="text-xs text-neutral-500 flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-neutral-400" />
@@ -416,16 +390,17 @@ function TalentSearchContent() {
                       {item.headline}
                     </p>
 
-                    {/* Verification Badges */}
+                    {/* Candidate Info Badges */}
                     <div className="flex flex-wrap items-center gap-2 mb-4">
-                      {verifiedRoles > 0 ? (
-                        <VerifiedBadge
-                          label={`${verifiedRoles} Verified Role${verifiedRoles > 1 ? "s" : ""}`}
-                          className="py-0.5 text-[10px]"
-                        />
-                      ) : (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] bg-neutral-100 text-neutral-600 border border-neutral-200">
-                          Self-Reported
+                      {item.yearsOfExperience > 0 && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] bg-neutral-100 text-neutral-700 border border-neutral-200 font-medium">
+                          {item.yearsOfExperience}+ Yrs Exp
+                        </span>
+                      )}
+
+                      {rep.completedJobs > 0 && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium">
+                          {rep.completedJobs} Completed {rep.completedJobs === 1 ? "Job" : "Jobs"}
                         </span>
                       )}
 

@@ -56,26 +56,15 @@ const ExperienceSchema = new mongoose.Schema(
         trim: true,
       },
     ],
-    verificationStatus: {
+    projectUrl: {
       type: String,
-      enum: ["unverified", "pending", "verified", "rejected"],
-      default: "unverified",
+      trim: true,
+      default: "",
     },
-    verifiedBy: {
-      verifierUser: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-      verifierName: String,
-      verifierEmail: String,
-      verifierRole: String,
-      verifierOrganization: String,
-      verifiedAt: Date,
-      verificationNotes: String,
-      verificationReferenceCode: String,
-    },
-    rejectionReason: {
+    link: {
       type: String,
+      trim: true,
+      default: "",
     },
   },
   {
@@ -83,7 +72,7 @@ const ExperienceSchema = new mongoose.Schema(
   }
 );
 
-ExperienceSchema.index({ user: 1, verificationStatus: 1 });
+ExperienceSchema.index({ user: 1, startDate: -1 });
 
 module.exports =
   mongoose.models.Experience || mongoose.model("Experience", ExperienceSchema);

@@ -20,6 +20,9 @@ exports.addExperience = async (req, res, next) => {
       isCurrent,
       description,
       skillsUsed,
+      projectUrl,
+      link,
+      portfolioUrl,
     } = req.body;
 
     let orgId = organizationId;
@@ -31,6 +34,8 @@ exports.addExperience = async (req, res, next) => {
         orgId = existingOrg._id;
       }
     }
+
+    const experienceLink = (projectUrl || link || portfolioUrl || "").trim();
 
     const experience = await Experience.create({
       user: req.user._id,
@@ -47,9 +52,10 @@ exports.addExperience = async (req, res, next) => {
       skillsUsed: Array.isArray(skillsUsed)
         ? skillsUsed
         : skillsUsed
-        ? skillsUsed.split(",").map((s) => s.trim())
+        ? skillsUsed.split(",").map((s) => s.trim()).filter(Boolean)
         : [],
-      verificationStatus: "unverified",
+      projectUrl: experienceLink,
+      link: experienceLink,
     });
 
     await updateReputationScore(req.user._id);
@@ -65,7 +71,7 @@ exports.addExperience = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: "Experience added successfully.",
+      message: "Work history entry added successfully.",
       experience,
     });
   } catch (error) {
@@ -109,35 +115,31 @@ exports.updateExperience = async (req, res, next) => {
       isCurrent,
       description,
       skillsUsed,
+      projectUrl,
+      link,
+      portfolioUrl,
     } = req.body;
-
-    // If already verified and title/company is being changed, require re-verification
-    let resetVerification = false;
-    if (
-      experience.verificationStatus === "verified" &&
-      ((title && title !== experience.title) ||
-        (company && company !== experience.company))
-    ) {
-      resetVerification = true;
-      experience.verificationStatus = "unverified";
-      experience.verifiedBy = undefined;
-    }
 
     if (title) experience.title = title;
     if (company) experience.company = company;
-    if (organizationId) experience.organization = organizationId;
+    if (organizationId !== undefined) experience.organization = organizationId;
     if (location !== undefined) experience.location = location;
     if (locationType) experience.locationType = locationType;
     if (employmentType) experience.employmentType = employmentType;
     if (startDate) experience.startDate = startDate;
-    if (endDate !== undefined)
-      experience.endDate = isCurrent ? null : endDate;
+    if (endDate !== undefined) experience.endDate = isCurrent ? null : endDate;
     if (isCurrent !== undefined) experience.isCurrent = Boolean(isCurrent);
     if (description !== undefined) experience.description = description;
     if (skillsUsed !== undefined) {
       experience.skillsUsed = Array.isArray(skillsUsed)
         ? skillsUsed
-        : skillsUsed.split(",").map((s) => s.trim());
+        : skillsUsed.split(",").map((s) => s.trim()).filter(Boolean);
+    }
+
+    const experienceLink = projectUrl !== undefined ? projectUrl : link !== undefined ? link : portfolioUrl;
+    if (experienceLink !== undefined) {
+      experience.projectUrl = experienceLink.trim();
+      experience.link = experienceLink.trim();
     }
 
     await experience.save();
@@ -145,9 +147,7 @@ exports.updateExperience = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: resetVerification
-        ? "Experience updated. Note: core details changed so re-verification is required."
-        : "Experience updated successfully.",
+      message: "Experience updated successfully.",
       experience,
     });
   } catch (error) {

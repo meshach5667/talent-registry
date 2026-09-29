@@ -129,15 +129,15 @@ export default function OrganizationDetailsPage() {
           </div>
         </div>
 
-        {/* Verified Alumni / Current Engineers */}
+        {/* Engineers & Technical Alumni */}
         <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 sm:p-8 shadow-sm space-y-6">
           <div className="border-b border-neutral-100 pb-4">
             <h2 className="text-lg font-bold text-neutral-900 tracking-tight flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-600" />
-              <span>Verified Engineers & Technical Alumni</span>
+              <Users className="w-5 h-5 text-neutral-700" />
+              <span>Engineers & Technical Alumni</span>
             </h2>
             <p className="text-xs text-neutral-500 mt-1">
-              Professionals with employer-certified work records at {organization.name}.
+              Professionals who have worked or currently work at {organization.name}.
             </p>
           </div>
 
@@ -146,7 +146,7 @@ export default function OrganizationDetailsPage() {
               <div className="py-10 text-center rounded-xl bg-neutral-50 border border-neutral-200/60">
                 <Users className="w-8 h-8 text-neutral-300 mx-auto mb-2" />
                 <p className="text-xs text-neutral-500 font-medium">
-                  No public certified alumni listed yet for this organization.
+                  No public alumni listed yet for this organization.
                 </p>
               </div>
             ) : (
@@ -175,7 +175,6 @@ export default function OrganizationDetailsPage() {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <VerifiedBadge label="Certified Record" />
                     <Link href={`/passport/${exp.user?._id}`}>
                       <Button size="sm" variant="outline" className="text-xs rounded-lg shadow-xs hover:border-neutral-400">
                         View Passport →

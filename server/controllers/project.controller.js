@@ -49,7 +49,6 @@ exports.addProject = async (req, res, next) => {
       endDate: isOngoing ? null : endDate,
       isOngoing: Boolean(isOngoing),
       metrics,
-      verificationStatus: "unverified",
     });
 
     await updateReputationScore(req.user._id);

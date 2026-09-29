@@ -1,6 +1,5 @@
 const Organization = require("../models/Organization");
 const Experience = require("../models/Experience");
-const VerificationRequest = require("../models/VerificationRequest");
 const { uploadImageBuffer, deleteImage } = require("../services/upload.service");
 const { logAudit } = require("../services/audit.service");
 
@@ -59,10 +58,9 @@ exports.getOrganization = async (req, res, next) => {
       });
     }
 
-    // Find verified alumni / current professionals
-    const verifiedExperiences = await Experience.find({
+    // Find alumni / professionals associated with this organization
+    const orgExperiences = await Experience.find({
       organization: organization._id,
-      verificationStatus: "verified",
     })
       .populate("user", "name avatar country city")
       .limit(20);
@@ -70,7 +68,8 @@ exports.getOrganization = async (req, res, next) => {
     res.status(200).json({
       success: true,
       organization,
-      verifiedAlumni: verifiedExperiences,
+      verifiedAlumni: orgExperiences,
+      alumni: orgExperiences,
     });
   } catch (error) {
     next(error);
@@ -186,7 +185,7 @@ exports.uploadLogo = async (req, res, next) => {
   }
 };
 
-// @desc    Get organization dashboard metrics and requests
+// @desc    Get organization dashboard metrics and members
 // @route   GET /api/v1/organizations/:id/dashboard
 // @access  Private (Employer / Admin)
 exports.getOrganizationDashboard = async (req, res, next) => {
@@ -199,39 +198,29 @@ exports.getOrganizationDashboard = async (req, res, next) => {
       });
     }
 
-    const pendingRequests = await VerificationRequest.find({
-      $or: [{ targetOrganization: org._id }, { verifierEmail: req.user.email }],
-      status: "pending",
-    })
-      .populate("professional", "name email avatar country city")
-      .populate("experience")
-      .populate("project");
-
-    const completedVerifications = await VerificationRequest.find({
-      $or: [{ targetOrganization: org._id }, { verifierEmail: req.user.email }],
-      status: { $in: ["approved", "rejected"] },
-    })
-      .populate("professional", "name email avatar")
-      .populate("experience")
-      .populate("project")
-      .sort({ updatedAt: -1 })
-      .limit(10);
-
-    const verifiedEmployeesCount = await Experience.countDocuments({
+    const teamMembers = await Experience.find({
       organization: org._id,
-      verificationStatus: "verified",
+    })
+      .populate("user", "name email avatar country city")
+      .sort({ startDate: -1 })
+      .limit(20);
+
+    const alumniCount = await Experience.countDocuments({
+      organization: org._id,
     });
 
     res.status(200).json({
       success: true,
       organization: org,
       metrics: {
-        pendingRequestsCount: pendingRequests.length,
-        verifiedEmployeesCount,
-        totalVerificationsReviewed: completedVerifications.length,
+        pendingRequestsCount: 0,
+        verifiedEmployeesCount: alumniCount,
+        totalTeamMembers: alumniCount,
+        totalVerificationsReviewed: 0,
       },
-      pendingRequests,
-      recentActivity: completedVerifications,
+      teamMembers,
+      pendingRequests: [],
+      recentActivity: [],
     });
   } catch (error) {
     next(error);

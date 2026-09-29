@@ -7,7 +7,6 @@ const Organization = require("../models/Organization");
 const Profile = require("../models/Profile");
 const Experience = require("../models/Experience");
 const Project = require("../models/Project");
-const VerificationRequest = require("../models/VerificationRequest");
 const Feedback = require("../models/Feedback");
 const ContactRequest = require("../models/ContactRequest");
 const Notification = require("../models/Notification");
@@ -28,7 +27,6 @@ async function seedDatabase() {
     await Profile.deleteMany({});
     await Experience.deleteMany({});
     await Project.deleteMany({});
-    await VerificationRequest.deleteMany({});
     await Feedback.deleteMany({});
     await ContactRequest.deleteMany({});
     await Notification.deleteMany({});
@@ -166,7 +164,7 @@ async function seedDatabase() {
     await orgFlutterwave.save();
 
     // 4. Create Professionals & Profiles
-    // Professional 1: Kwame Mensah (Elite Talent, Ghana)
+    // Professional 1: Kwame Mensah (Ghana)
     const userKwame = await User.create({
       name: "Kwame Mensah",
       email: "kwame.mensah@talentregistry.africa",
@@ -188,11 +186,11 @@ async function seedDatabase() {
       city: "Accra",
       bio: "8+ years engineering low-latency distributed payment gateways and ledger reconciliation pipelines handling over $40M daily volume across West Africa. Passionate about fault-tolerant systems, Go, Kubernetes, and event sourcing architecture.",
       skills: [
-        { name: "Go (Golang)", category: "Backend", verifiedCount: 3 },
-        { name: "Distributed Systems", category: "Architecture", verifiedCount: 2 },
-        { name: "PostgreSQL & CockroachDB", category: "Database", verifiedCount: 2 },
-        { name: "Kafka & Event Sourcing", category: "Infrastructure", verifiedCount: 2 },
-        { name: "Kubernetes / AWS", category: "Cloud & DevOps", verifiedCount: 1 },
+        { name: "Go (Golang)", category: "Backend" },
+        { name: "Distributed Systems", category: "Architecture" },
+        { name: "PostgreSQL & CockroachDB", category: "Database" },
+        { name: "Kafka & Event Sourcing", category: "Infrastructure" },
+        { name: "Kubernetes / AWS", category: "Cloud & DevOps" },
       ],
       languages: ["English (Native)", "French (Conversational)", "Twi (Fluent)"],
       socialLinks: {
@@ -207,8 +205,6 @@ async function seedDatabase() {
           fieldOfStudy: "Computer Systems Engineering",
           startYear: 2012,
           endYear: 2016,
-          verified: true,
-          verifiedBy: "KNUST Registrar",
         },
       ],
       certifications: [
@@ -217,7 +213,6 @@ async function seedDatabase() {
           issuer: "Amazon Web Services",
           issueDate: new Date("2023-04-10"),
           credentialId: "AWS-PSA-994821",
-          verified: true,
         },
       ],
       availability: {
@@ -229,7 +224,7 @@ async function seedDatabase() {
       passportViews: 142,
     });
 
-    // Kwame's Experiences
+    // Kwame's Experiences (Work History)
     const kwameExp1 = await Experience.create({
       user: userKwame._id,
       title: "Lead Infrastructure Architect",
@@ -242,17 +237,8 @@ async function seedDatabase() {
       isCurrent: true,
       description: "Spearheaded core multi-region transaction routing engine, achieving 99.995% uptime and reducing P99 latency by 42%. Mentored 12 backend engineers across Lagos, Nairobi and Accra.",
       skillsUsed: ["Go", "Kafka", "PostgreSQL", "Docker", "Terraform"],
-      verificationStatus: "verified",
-      verifiedBy: {
-        verifierUser: employerTunde._id,
-        verifierName: "Tunde Adebayo",
-        verifierEmail: "tunde@paystack.com",
-        verifierRole: "VP of Engineering",
-        verifierOrganization: "Paystack",
-        verifiedAt: new Date("2023-01-15"),
-        verificationNotes: "Kwame led the core transaction routing overhaul with exemplary precision. His architecture handled Black Friday surges flawlessly without downtime.",
-        verificationReferenceCode: "VER-EXP-PAYSTACK-KM21",
-      },
+      projectUrl: "https://paystack.com",
+      link: "https://paystack.com",
     });
 
     const kwameExp2 = await Experience.create({
@@ -267,16 +253,8 @@ async function seedDatabase() {
       endDate: new Date("2021-02-28"),
       description: "Built scalable microservices for enterprise fintech partners in the US and Europe. Implemented automated CI/CD pipeline and event-driven data streaming.",
       skillsUsed: ["Go", "Node.js", "Docker", "RabbitMQ"],
-      verificationStatus: "verified",
-      verifiedBy: {
-        verifierName: "Chiamaka Eze",
-        verifierEmail: "talent-ops@andela.com",
-        verifierRole: "Senior Technical Program Manager",
-        verifierOrganization: "Andela",
-        verifiedAt: new Date("2021-03-10"),
-        verificationNotes: "Verified employment, role, and positive tenure record at Andela.",
-        verificationReferenceCode: "VER-EXP-ANDELA-902",
-      },
+      projectUrl: "https://andela.com",
+      link: "https://andela.com",
     });
 
     // Kwame's Projects
@@ -292,20 +270,9 @@ async function seedDatabase() {
       startDate: new Date("2022-01-10"),
       endDate: new Date("2023-08-30"),
       metrics: "Reconciles 2.4M transactions daily with zero balance drift.",
-      verificationStatus: "verified",
-      verifiedBy: {
-        verifierUser: employerTunde._id,
-        verifierName: "Tunde Adebayo",
-        verifierEmail: "tunde@paystack.com",
-        verifierRole: "VP of Engineering",
-        verifierOrganization: "Paystack",
-        verifiedAt: new Date("2023-09-02"),
-        verificationNotes: "Directly verified. The settlement engine is currently powering live production volume.",
-        verificationReferenceCode: "VER-PRJ-SETTLE-883",
-      },
     });
 
-    // Kwame's Feedback
+    // Kwame's Client Feedback & Ratings
     await Feedback.create({
       professional: userKwame._id,
       author: employerTunde._id,
@@ -315,9 +282,24 @@ async function seedDatabase() {
       technicalCompetence: 5,
       communication: 5,
       reliability: 5,
-      review: "Kwame is one of the most thorough and dependable systems architects I have worked with across the continent. When critical production services were stressed during peak seasonal events, his failover patterns held gracefully. He sets the gold standard for verified engineering claims.",
+      review: "Kwame is one of the most thorough and dependable systems architects I have worked with across the continent. When critical production services were stressed during peak seasonal events, his failover patterns held gracefully.",
       relationship: "Direct Manager",
       isVerifiedEmployer: true,
+    });
+
+    // Create a confirmed engagement for Kwame
+    await ContactRequest.create({
+      professional: userKwame._id,
+      employer: employerSarah._id,
+      organization: orgSafaricom._id,
+      subject: "Principal Architecture Advisory - M-PESA Global Hub",
+      message: "Hello Kwame, we reviewed your Paystack distributed systems work. Safaricom is building a new cross-border remittance gateway and we would like to invite you for an advisory engagement.",
+      roleOffered: "Lead Distributed Systems Advisor",
+      engagementType: "consulting",
+      budgetRange: "$100 - $120 / hour",
+      status: "accepted",
+      responseMessage: "Delighted to collaborate with the Safaricom infrastructure team on the M-PESA Global Hub initiative.",
+      respondedAt: new Date("2024-05-15"),
     });
 
     await updateReputationScore(userKwame._id);
@@ -344,11 +326,11 @@ async function seedDatabase() {
       city: "Nairobi",
       bio: "Site reliability and infrastructure automation engineer focusing on mission-critical mobile money and banking workloads. Proven track record in multi-cloud migration, Kubernetes clusters management, and zero-downtime rollouts.",
       skills: [
-        { name: "Kubernetes (EKS/GKE)", category: "DevOps", verifiedCount: 2 },
-        { name: "Terraform & IaC", category: "DevOps", verifiedCount: 2 },
-        { name: "AWS & GCP", category: "Cloud", verifiedCount: 2 },
-        { name: "Prometheus & Grafana", category: "Observability", verifiedCount: 1 },
-        { name: "Python / Bash", category: "Scripting", verifiedCount: 1 },
+        { name: "Kubernetes (EKS/GKE)", category: "DevOps" },
+        { name: "Terraform & IaC", category: "DevOps" },
+        { name: "AWS & GCP", category: "Cloud" },
+        { name: "Prometheus & Grafana", category: "Observability" },
+        { name: "Python / Bash", category: "Scripting" },
       ],
       education: [
         {
@@ -356,7 +338,6 @@ async function seedDatabase() {
           degree: "B.Sc. Computer Science",
           startYear: 2014,
           endYear: 2018,
-          verified: true,
         },
       ],
       availability: {
@@ -379,17 +360,8 @@ async function seedDatabase() {
       isCurrent: true,
       description: "Managing Kubernetes clusters handling M-PESA API gateway requests. Implemented GitOps using ArgoCD and automated incident alerting.",
       skillsUsed: ["Kubernetes", "AWS", "ArgoCD", "Terraform", "Prometheus"],
-      verificationStatus: "verified",
-      verifiedBy: {
-        verifierUser: employerSarah._id,
-        verifierName: "Sarah Mwangi",
-        verifierEmail: "sarah@safaricom.co.ke",
-        verifierRole: "Engineering Manager",
-        verifierOrganization: "Safaricom PLC",
-        verifiedAt: new Date("2023-04-18"),
-        verificationNotes: "Confirmed employment and leadership of our SRE modernization initiatives.",
-        verificationReferenceCode: "VER-EXP-SAF-WK20",
-      },
+      projectUrl: "https://safaricom.co.ke",
+      link: "https://safaricom.co.ke",
     });
 
     await Feedback.create({
@@ -430,10 +402,10 @@ async function seedDatabase() {
       city: "Lagos",
       bio: "Crafting bulletproof, accessible web applications and multi-brand design systems for hyper-growth African startups. Core contributor to open-source UI libraries.",
       skills: [
-        { name: "React & Next.js", category: "Frontend", verifiedCount: 2 },
-        { name: "TypeScript", category: "Languages", verifiedCount: 2 },
-        { name: "Design Systems & Tailwind", category: "UI/UX", verifiedCount: 2 },
-        { name: "Web Performance & Core Web Vitals", category: "Performance", verifiedCount: 1 },
+        { name: "React & Next.js", category: "Frontend" },
+        { name: "TypeScript", category: "Languages" },
+        { name: "Design Systems & Tailwind", category: "UI/UX" },
+        { name: "Web Performance & Core Web Vitals", category: "Performance" },
       ],
       availability: {
         status: "open_to_offers",
@@ -455,20 +427,10 @@ async function seedDatabase() {
       endDate: new Date("2023-12-31"),
       description: "Built the unified design component library adopted by 28 engineering teams across Flutterwave checkout, dashboard, and mobile web experiences.",
       skillsUsed: ["React", "TypeScript", "Tailwind CSS", "Storybook"],
-      verificationStatus: "verified",
-      verifiedBy: {
-        verifierUser: employerKofi._id,
-        verifierName: "Kofi Boateng",
-        verifierEmail: "kofi@flutterwave.com",
-        verifierRole: "Head of Talent & Engineering Operations",
-        verifierOrganization: "Flutterwave",
-        verifiedAt: new Date("2024-01-10"),
-        verificationNotes: "Verified. Chidi built foundational UI systems that sped up engineering delivery company-wide.",
-        verificationReferenceCode: "VER-EXP-FLW-CA21",
-      },
+      projectUrl: "https://flutterwave.com",
+      link: "https://flutterwave.com",
     });
 
-    // Unverified experience to show contrast!
     await Experience.create({
       user: userChidi._id,
       title: "Freelance UI Specialist",
@@ -480,7 +442,20 @@ async function seedDatabase() {
       endDate: new Date("2019-12-31"),
       description: "Delivered customized web interfaces for regional e-commerce stores.",
       skillsUsed: ["JavaScript", "HTML/CSS"],
-      verificationStatus: "unverified",
+    });
+
+    await Feedback.create({
+      professional: userChidi._id,
+      author: employerKofi._id,
+      organization: orgFlutterwave._id,
+      experience: chidiExp1._id,
+      rating: 5,
+      technicalCompetence: 5,
+      communication: 5,
+      reliability: 5,
+      review: "Chidi built foundational UI systems that sped up engineering delivery company-wide. Highly recommend his design systems capability.",
+      relationship: "Direct Manager",
+      isVerifiedEmployer: true,
     });
 
     await updateReputationScore(userChidi._id);
@@ -507,10 +482,10 @@ async function seedDatabase() {
       city: "Cairo",
       bio: "Specializing in real-time fraud detection algorithms, graph neural networks for transaction monitoring, and Arabic/English NLP systems.",
       skills: [
-        { name: "Python & PyTorch", category: "AI/ML", verifiedCount: 2 },
-        { name: "Graph Neural Networks", category: "AI/ML", verifiedCount: 1 },
-        { name: "MLOps & Kubeflow", category: "MLOps", verifiedCount: 1 },
-        { name: "Feature Store & Feast", category: "Data", verifiedCount: 1 },
+        { name: "Python & PyTorch", category: "AI/ML" },
+        { name: "Graph Neural Networks", category: "AI/ML" },
+        { name: "MLOps & Kubeflow", category: "MLOps" },
+        { name: "Feature Store & Feast", category: "Data" },
       ],
       availability: {
         status: "open_to_offers",
@@ -531,16 +506,8 @@ async function seedDatabase() {
       isCurrent: true,
       description: "Deployed anomaly detection neural networks flagging financial illicit flows with 98.4% precision.",
       skillsUsed: ["Python", "PyTorch", "FastAPI", "Docker"],
-      verificationStatus: "verified",
-      verifiedBy: {
-        verifierName: "Dr. Hesham Talaat",
-        verifierEmail: "hesham.t@fintechnexus.eg",
-        verifierRole: "Chief Research Scientist",
-        verifierOrganization: "Fintech Nexus Egypt",
-        verifiedAt: new Date("2023-05-11"),
-        verificationNotes: "Verified research leadership and state-of-the-art fraud model deployments.",
-        verificationReferenceCode: "VER-EXP-EGY-ZM21",
-      },
+      projectUrl: "https://github.com",
+      link: "https://github.com",
     });
 
     await updateReputationScore(userZainab._id);
@@ -567,10 +534,10 @@ async function seedDatabase() {
       city: "Cape Town",
       bio: "Fintech builder creating intuitive POS interfaces, merchant portals, and payment integrations. Passionate about empowering SMBs with modern software tools.",
       skills: [
-        { name: "TypeScript", category: "Languages", verifiedCount: 1 },
-        { name: "React Native", category: "Mobile", verifiedCount: 1 },
-        { name: "Node.js & Express", category: "Backend", verifiedCount: 1 },
-        { name: "GraphQL", category: "API", verifiedCount: 1 },
+        { name: "TypeScript", category: "Languages" },
+        { name: "React Native", category: "Mobile" },
+        { name: "Node.js & Express", category: "Backend" },
+        { name: "GraphQL", category: "API" },
       ],
       availability: {
         status: "available",
@@ -580,7 +547,7 @@ async function seedDatabase() {
       },
     });
 
-    const thaboExp1 = await Experience.create({
+    await Experience.create({
       user: userThabo._id,
       title: "Senior Mobile Engineer",
       company: "Yoco",
@@ -592,21 +559,13 @@ async function seedDatabase() {
       isCurrent: true,
       description: "Co-developed modern POS companion app enabling offline card capture and merchant business analytics.",
       skillsUsed: ["React Native", "TypeScript", "Redux", "Bluetooth BLE"],
-      verificationStatus: "verified",
-      verifiedBy: {
-        verifierName: "Jacques Van Der Merwe",
-        verifierEmail: "jacques@yoco.com",
-        verifierRole: "Director of Mobile Engineering",
-        verifierOrganization: "Yoco",
-        verifiedAt: new Date("2023-11-20"),
-        verificationNotes: "Confirmed employment and crucial contributions to our point-of-sale mobile products.",
-        verificationReferenceCode: "VER-EXP-YOCO-TM22",
-      },
+      projectUrl: "https://yoco.com",
+      link: "https://yoco.com",
     });
 
     await updateReputationScore(userThabo._id);
 
-    // Professional 6: Amina Diallo (Senegal, with PENDING verification request ready to test!)
+    // Professional 6: Amina Diallo (Senegal)
     const userAmina = await User.create({
       name: "Amina Diallo",
       email: "amina.diallo@talentregistry.africa",
@@ -652,59 +611,27 @@ async function seedDatabase() {
       endDate: new Date("2023-11-30"),
       description: "Conducted external application security audits, vulnerability scans, and remediation roadmap for partner payment plugins.",
       skillsUsed: ["Burp Suite", "OWASP", "Vulnerability Management"],
-      verificationStatus: "pending",
+      projectUrl: "https://paystack.com",
+      link: "https://paystack.com",
     });
 
-    // Create a pending verification request from Amina to Paystack (Tunde Adebayo)
-    const aminaVerification = await VerificationRequest.create({
-      type: "experience",
+    await Feedback.create({
       professional: userAmina._id,
+      author: employerTunde._id,
+      organization: orgPaystack._id,
       experience: aminaExp._id,
-      targetOrganization: orgPaystack._id,
-      verifierEmail: "tunde@paystack.com",
-      verifierName: "Tunde Adebayo",
-      verifierTitle: "VP of Engineering",
-      token: "demo-verify-token-amina-paystack",
-      status: "pending",
-      requestMessage: "Hi Tunde, please verify my contract work conducting application security audits on the partner plugins.",
-    });
-
-    // Create notification for Tunde
-    await Notification.create({
-      recipient: employerTunde._id,
-      sender: userAmina._id,
-      type: "verification_request",
-      title: "Verification Request from Amina Diallo",
-      message: "Amina Diallo requested you verify her contract experience as Security Consultant at Paystack.",
-      actionUrl: `/verification/demo-verify-token-amina-paystack`,
-      metadata: { verificationId: aminaVerification._id },
+      rating: 5,
+      technicalCompetence: 5,
+      communication: 5,
+      reliability: 5,
+      review: "Amina conducted thorough application security audits on our partner integrations with high professionalism and delivered actionable remediation recommendations.",
+      relationship: "Direct Manager",
+      isVerifiedEmployer: true,
     });
 
     await updateReputationScore(userAmina._id);
 
-    // 5. Create a sample Contact Request
-    await ContactRequest.create({
-      professional: userKwame._id,
-      employer: employerSarah._id,
-      organization: orgSafaricom._id,
-      subject: "Principal Architecture Advisory - M-PESA Global Hub",
-      message: "Hello Kwame, we reviewed your verified Paystack distributed systems work. Safaricom is building a new cross-border remittance gateway and we would like to invite you for an advisory / contract engagement.",
-      roleOffered: "Lead Distributed Systems Advisor",
-      engagementType: "consulting",
-      budgetRange: "$100 - $120 / hour",
-      status: "pending",
-    });
-
-    await Notification.create({
-      recipient: userKwame._id,
-      sender: employerSarah._id,
-      type: "contact_request",
-      title: "New Opportunity from Safaricom PLC",
-      message: "Sarah Mwangi from Safaricom PLC sent you an inquiry: 'Principal Architecture Advisory - M-PESA Global Hub'.",
-      actionUrl: "/dashboard",
-    });
-
-    // 6. Create sample Audit Logs
+    // 5. Create sample Audit Logs
     await AuditLog.create({
       user: adminUser._id,
       action: "PLATFORM_INITIALIZED",
@@ -716,14 +643,14 @@ async function seedDatabase() {
 
     await AuditLog.create({
       user: employerTunde._id,
-      action: "VERIFICATION_APPROVED",
-      targetType: "Experience",
+      action: "FEEDBACK_CREATED",
+      targetType: "Feedback",
       targetId: kwameExp1._id.toString(),
       ipAddress: "102.89.44.12",
-      details: { professional: "Kwame Mensah", referenceCode: "VER-EXP-PAYSTACK-KM21" },
+      details: { professional: "Kwame Mensah" },
     });
 
-    // 7. Create a Sample Dispute to showcase the Admin Dispute Management
+    // 6. Create a Sample Dispute to showcase Admin Dispute Management
     await Dispute.create({
       reporter: employerSarah._id,
       targetType: "profile",
@@ -736,7 +663,7 @@ async function seedDatabase() {
       status: "open",
     });
 
-    console.log("[Seeder] Successfully seeded database with rich African talent profiles, verified experiences, organizations, verifications, feedback, and audit logs!");
+    console.log("[Seeder] Successfully seeded database with African talent profiles, work history, organizations, feedback, and audit logs!");
     process.exit(0);
   } catch (error) {
     console.error("[Seeder Error]", error);

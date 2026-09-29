@@ -1,9 +1,9 @@
 export default function manifest() {
   return {
-    name: "Talent Registry | Pan-African Professional Verification Network",
+    name: "Talent Registry | Pan-African Technical Talent Network",
     short_name: "TalentRegistry",
     description:
-      "Don't just claim your experience. Prove it. The verified professional discovery network for African engineers, architects, and technical leaders.",
+      "The professional discovery network for African engineers, architects, and technical leaders.",
     start_url: "/",
     display: "standalone",
     background_color: "#090d16",
@@ -39,15 +39,15 @@ export default function manifest() {
       {
         name: "Discover Talent",
         short_name: "Talent",
-        description: "Search verified engineers across Africa",
+        description: "Search top engineers across Africa",
         url: "/talent",
         icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
       },
       {
-        name: "Audit / Verify Claim",
-        short_name: "Verification",
-        description: "Audit an experience claim with institutional token",
-        url: "/verification",
+        name: "Explore Organizations",
+        short_name: "Organizations",
+        description: "Browse companies and tech hubs across Africa",
+        url: "/organizations",
         icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
       },
       {

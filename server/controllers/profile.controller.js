@@ -244,10 +244,6 @@ exports.searchProfiles = async (req, res, next) => {
       query["reputation.score"] = { $gte: Number(minScore) };
     }
 
-    if (verifiedOnly === "true") {
-      query["reputation.verifiedExperienceCount"] = { $gt: 0 };
-    }
-
     if (q && q.trim()) {
       const searchRegex = new RegExp(q.trim(), "i");
       query.$or = [
@@ -292,35 +288,26 @@ exports.searchProfiles = async (req, res, next) => {
 // @access  Public
 exports.getSpotlight = async (req, res, next) => {
   try {
-    const verifiedPros = await Profile.find({
+    const spotlightPros = await Profile.find({
       isPublic: true,
-      "reputation.verifiedExperienceCount": { $gt: 0 },
     })
       .populate("user", "name avatar country city githubUsername")
       .sort({ "reputation.score": -1 })
       .limit(6);
 
     const totalTalent = await Profile.countDocuments();
-    const verifiedTalent = await Profile.countDocuments({
-      "reputation.verifiedExperienceCount": { $gt: 0 },
-    });
     const totalExperiences = await Experience.countDocuments();
-    const verifiedExperiences = await Experience.countDocuments({
-      verificationStatus: "verified",
-    });
+    const totalProjects = await Project.countDocuments();
+    const totalFeedbacks = await Feedback.countDocuments();
 
     res.status(200).json({
       success: true,
-      spotlight: verifiedPros,
+      spotlight: spotlightPros,
       stats: {
         totalTalent,
-        verifiedTalent,
         totalExperiences,
-        verifiedExperiences,
-        verificationRate:
-          totalExperiences > 0
-            ? Math.round((verifiedExperiences / totalExperiences) * 100)
-            : 0,
+        totalProjects,
+        totalFeedbacks,
       },
     });
   } catch (error) {

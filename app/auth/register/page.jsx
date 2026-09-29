@@ -77,7 +77,7 @@ export default function RegisterPage() {
             Create Your Account
           </h1>
           <p className="text-xs text-neutral-500 mt-1 max-w-sm">
-            Join Africa's professional verification & talent discovery platform
+            Join Africa's premier talent registry & professional discovery platform
           </p>
         </div>
 

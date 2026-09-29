@@ -61,27 +61,6 @@ const projectValidators = {
   }),
 };
 
-const verificationValidators = {
-  request: validate((body) => {
-    const errors = [];
-    if (!body.type || !["experience", "project"].includes(body.type))
-      errors.push("Verification type must be 'experience' or 'project'");
-    if (body.type === "experience" && !body.experienceId)
-      errors.push("Experience ID is required");
-    if (body.type === "project" && !body.projectId)
-      errors.push("Project ID is required");
-    if (!body.verifierEmail || !/^\S+@\S+\.\S+$/.test(body.verifierEmail))
-      errors.push("A valid verifier work email address is required");
-    return errors;
-  }),
-  decision: validate((body) => {
-    const errors = [];
-    if (!body.status || !["approved", "rejected"].includes(body.status))
-      errors.push("Status decision must be 'approved' or 'rejected'");
-    return errors;
-  }),
-};
-
 const contactValidators = {
   create: validate((body) => {
     const errors = [];
@@ -98,6 +77,5 @@ module.exports = {
   authValidators,
   experienceValidators,
   projectValidators,
-  verificationValidators,
   contactValidators,
 };

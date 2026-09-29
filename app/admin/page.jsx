@@ -219,13 +219,13 @@ export default function AdminDashboardPage() {
               Platform Governance Console
             </h1>
             <p className="text-xs sm:text-sm text-neutral-400 max-w-xl">
-              Manage network participants, enforce verification integrity, and inspect cryptographic audit logs.
+              Manage network participants, review disputes, and inspect platform audit logs.
             </p>
           </div>
 
           <div className="flex items-center gap-2 relative z-10">
             <Badge className="bg-neutral-800/90 text-neutral-300 border-neutral-700/80 font-mono text-xs px-3 py-1.5 rounded-lg shadow-xs">
-              Region: Pan-Africa (Verified)
+              Region: Pan-Africa (Active)
             </Badge>
           </div>
         </div>
@@ -258,24 +258,24 @@ export default function AdminDashboardPage() {
 
           <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs hover:shadow-sm transition-all duration-200">
             <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
-              Verifications
+              Work History
             </div>
             <div className="text-2xl sm:text-3xl font-extrabold text-neutral-900 mt-1">
-              {stats.totalVerifications || 0}
+              {stats.totalExperiences || 0}
             </div>
             <div className="text-[11px] text-neutral-400 mt-1">
-              {stats.approvedVerifications} Certified
+              {stats.totalProjects || 0} Deliverables
             </div>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs hover:shadow-sm transition-all duration-200">
             <div className="text-xs text-neutral-500 font-medium uppercase tracking-wider">
-              Pending Audits
+              Client Reviews
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-amber-600 mt-1">
-              {stats.pendingVerifications || 0}
+            <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-1">
+              {stats.totalFeedbacks || 0}
             </div>
-            <div className="text-[11px] text-neutral-400 mt-1">In Review</div>
+            <div className="text-[11px] text-neutral-400 mt-1">Ratings Published</div>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs hover:shadow-sm transition-all duration-200 col-span-2 sm:col-span-1">
@@ -601,7 +601,7 @@ export default function AdminDashboardPage() {
                   Cryptographic Audit Trail
                 </h2>
                 <p className="text-xs text-neutral-500 mt-0.5">
-                  Immutable event log recording all verification minting, updates, and logins.
+                  Platform event log recording all profile modifications, reviews, and security actions.
                 </p>
               </div>
               <Button size="sm" variant="outline" onClick={loadAuditLogs} className="rounded-lg shadow-2xs">
