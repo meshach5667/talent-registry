@@ -84,7 +84,7 @@ npm run seed
 Default demo accounts created during seeding:
 - Professional: kwame@example.com (Password: Password123!)
 - Employer: recruiter@paystack.com (Password: Password123!)
-- Admin: admin@talentregistry.africa (Password: AdminPass123!)
+- Admin: admin@talentregistry.africa (Password: AdminPassword2026!)
 
 ### 5. Run the Application
 
