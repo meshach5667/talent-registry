@@ -1,3 +1,8 @@
+const dns = require("dns");
+try {
+  dns.setDefaultResultOrder("ipv4first");
+} catch (e) {}
+
 const nodemailer = require("nodemailer");
 
 let cachedTestAccount = null;
@@ -96,14 +101,19 @@ async function sendEmail({ to, subject, html, text }) {
   // Check for Resend API key first
   if (process.env.RESEND_API_KEY) {
     try {
+      let resendFrom =
+        process.env.RESEND_FROM ||
+        (process.env.EMAIL_FROM?.includes("@resend.dev") ? process.env.EMAIL_FROM : null) ||
+        "Talent Registry <onboarding@resend.dev>";
+
       const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+          Authorization: `Bearer ${process.env.RESEND_API_KEY.trim()}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: process.env.EMAIL_FROM || "Talent Registry <onboarding@resend.dev>",
+          from: resendFrom,
           to: [to],
           subject,
           html,
@@ -120,7 +130,10 @@ async function sendEmail({ to, subject, html, text }) {
       return { success: true, messageId: data.id };
     } catch (err) {
       console.error(`[Email Service] Resend API error:`, err.message);
-      // Fallback to SMTP
+      return {
+        success: false,
+        error: `Resend error: ${err.message}`,
+      };
     }
   }
 
