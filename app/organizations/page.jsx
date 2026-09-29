@@ -61,7 +61,7 @@ export default function OrganizationsPage() {
               Verified African Tech Organizations
             </h1>
             <p className="text-xs text-neutral-600 mt-1">
-              Companies, fintechs, and labs actively verifying engineering accomplishments.
+              Companies, agencies, and tech hubs employing digital professionals and leaders across Africa.
             </p>
           </div>
 

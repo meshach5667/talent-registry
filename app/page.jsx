@@ -71,14 +71,14 @@ export default function HomePage() {
           <div className="max-w-3xl">
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-neutral-950 tracking-tight leading-[1.1]">
-              Showcase your real engineering impact.{" "}
+              Showcase your real impact.{" "}
               <span className="relative inline-block text-neutral-900 underline decoration-emerald-500 decoration-4 underline-offset-8">
                 Stand out.
               </span>
             </h1>
 
             <p className="mt-6 text-base sm:text-lg lg:text-xl text-neutral-600 leading-relaxed font-normal">
-              The discovery and reputation network for Africa’s top software engineers, system architects, and technical leaders. Turn your direct experience, projects, and client endorsements into a shareable Professional Passport.
+              The discovery and reputation network for Africa’s top writers, UI/UX designers, product managers, engineers, and digital creators. Turn your direct experience, projects, and client endorsements into a shareable Professional Passport.
             </p>
 
             {/* Live Search Bar */}
@@ -90,7 +90,7 @@ export default function HomePage() {
                 <Search className="w-4 h-4 text-neutral-400 shrink-0" />
                 <input
                   type="text"
-                  placeholder="Search skills, roles (e.g. Go, Kubernetes, Fintech)..."
+                  placeholder="Search skills, roles (e.g. Technical Writing, Figma, UI/UX, React)..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full text-xs sm:text-sm outline-none placeholder:text-neutral-400 text-neutral-900 bg-transparent font-medium"
@@ -120,28 +120,40 @@ export default function HomePage() {
             <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-neutral-500">
               <span className="font-semibold text-neutral-700">Popular searches:</span>
               <Link
-                href="/talent?skill=Go"
+                href="/talent?skill=Technical+Writing"
                 className="px-2.5 py-0.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 hover:text-neutral-950 transition-colors font-medium border border-neutral-200/60"
               >
-                Go (Golang)
+                Technical Writing
               </Link>
               <Link
-                href="/talent?skill=Kubernetes"
+                href="/talent?skill=UI%2FUX+Design"
                 className="px-2.5 py-0.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 hover:text-neutral-950 transition-colors font-medium border border-neutral-200/60"
               >
-                Kubernetes
+                UI/UX Design
+              </Link>
+              <Link
+                href="/talent?skill=Product+Management"
+                className="px-2.5 py-0.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 hover:text-neutral-950 transition-colors font-medium border border-neutral-200/60"
+              >
+                Product Management
+              </Link>
+              <Link
+                href="/talent?skill=React"
+                className="px-2.5 py-0.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 hover:text-neutral-950 transition-colors font-medium border border-neutral-200/60"
+              >
+                React & Frontend
               </Link>
               <Link
                 href="/talent?country=Ghana"
                 className="px-2.5 py-0.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 hover:text-neutral-950 transition-colors font-medium border border-neutral-200/60"
               >
-                Ghana Engineers
+                Ghana Talent
               </Link>
               <Link
                 href="/talent?country=Kenya"
                 className="px-2.5 py-0.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 hover:text-neutral-950 transition-colors font-medium border border-neutral-200/60"
               >
-                Kenya Cloud Leads
+                Kenya Hub
               </Link>
             </div>
           </div>
@@ -157,7 +169,7 @@ export default function HomePage() {
                 {stats.totalTalent || 6}+
               </div>
               <div className="text-[11px] text-neutral-600 uppercase tracking-wider font-semibold mt-1">
-                Active Engineers
+                Active Talents
               </div>
             </div>
 
@@ -203,7 +215,7 @@ export default function HomePage() {
               How Talent Registry Works
             </h2>
             <p className="mt-3 text-sm sm:text-base text-neutral-600 leading-relaxed">
-              A transparent discovery workflow that highlights engineering depth, project deliverables, and authentic client feedback.
+              A transparent discovery workflow that highlights portfolio depth, project deliverables, and authentic client feedback.
             </p>
           </div>
 
@@ -214,10 +226,10 @@ export default function HomePage() {
                 01
               </div>
               <h3 className="text-base font-bold text-neutral-950 mb-2">
-                Document Roles & Projects
+                Document Roles & Deliverables
               </h3>
               <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                Professionals directly record their work history, roles, technical stack, key projects, and live portfolio links.
+                Professionals directly record their work history, roles, written works, design prototypes, technical stack, and live portfolio links.
               </p>
             </div>
 
@@ -265,10 +277,10 @@ export default function HomePage() {
                 <span>Talent Spotlight</span>
               </div>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-neutral-950 tracking-tight">
-                African Technical Talent Spotlight
+                African Digital Talent Spotlight
               </h2>
               <p className="mt-1.5 text-sm text-neutral-600">
-                Engineers with proven track records across Africa’s leading tech ecosystems.
+                Writers, designers, engineers, and digital specialists with proven track records across Africa’s leading ecosystems.
               </p>
             </div>
 
@@ -405,14 +417,14 @@ export default function HomePage() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400 text-xs font-semibold mb-6">
             <ShieldCheck className="w-4 h-4 stroke-[2.5]" />
-            <span>Join 100+ African Tech Professionals</span>
+            <span>Join 100+ African Digital Professionals</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
-            Ready to showcase your engineering impact?
+            Ready to showcase your digital impact?
           </h2>
           <p className="mt-5 text-neutral-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-            Create your free Professional Passport today. Add your work history, link your projects, and stand out to top global and African employers.
+            Create your free Professional Passport today. Add your work history, link your articles, design portfolios, and projects, and stand out to top global and African employers.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">

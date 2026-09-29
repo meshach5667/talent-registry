@@ -19,7 +19,7 @@ export default function RegisterPage() {
   const [country, setCountry] = useState("Nigeria");
   const [city, setCity] = useState("Lagos");
   const [headline, setHeadline] = useState("");
-  const [profession, setProfession] = useState("Software Engineer");
+  const [profession, setProfession] = useState("Digital Professional");
   const [organizationName, setOrganizationName] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -77,7 +77,7 @@ export default function RegisterPage() {
             Create Your Account
           </h1>
           <p className="text-xs text-neutral-500 mt-1 max-w-sm">
-            Join Africa's premier talent registry & professional discovery platform
+            Join Africa's premier talent registry & professional discovery network for digital creators, writers, designers, and technical talent.
           </p>
         </div>
 
@@ -237,7 +237,7 @@ export default function RegisterPage() {
                   type="text"
                   value={profession}
                   onChange={(e) => setProfession(e.target.value)}
-                  placeholder="e.g. Senior Backend Engineer"
+                  placeholder="e.g. Technical Writer, UI/UX Designer, or Software Engineer"
                   className="w-full text-xs px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-1 focus:ring-neutral-900 bg-white"
                 />
               </div>
@@ -250,7 +250,7 @@ export default function RegisterPage() {
                   type="text"
                   value={headline}
                   onChange={(e) => setHeadline(e.target.value)}
-                  placeholder="e.g. Distributed Systems Engineer | High-Throughput Fintech"
+                  placeholder="e.g. Content Strategist & Writer | Developer Docs & Fintech"
                   className="w-full text-xs px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-1 focus:ring-neutral-900 bg-white"
                 />
               </div>

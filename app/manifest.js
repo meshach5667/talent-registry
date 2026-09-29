@@ -1,9 +1,9 @@
 export default function manifest() {
   return {
-    name: "Talent Registry | Pan-African Technical Talent Network",
+    name: "Talent Registry | Pan-African Digital Talent Network",
     short_name: "TalentRegistry",
     description:
-      "The professional discovery network for African engineers, architects, and technical leaders.",
+      "The professional discovery network for African writers, designers, engineers, and digital talents.",
     start_url: "/",
     display: "standalone",
     background_color: "#090d16",
@@ -39,7 +39,7 @@ export default function manifest() {
       {
         name: "Discover Talent",
         short_name: "Talent",
-        description: "Search top engineers across Africa",
+        description: "Search top digital talents across Africa",
         url: "/talent",
         icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
       },

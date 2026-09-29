@@ -1,16 +1,16 @@
 # Talent Registry Africa
 
-Talent Registry Africa is a professional discovery and reputation platform for African software engineers, system architects, and technical leaders. The platform enables professionals to build a shareable Professional Passport showcasing their work history, technical deliverables, skills, and portfolio links without requiring third-party employment verification.
+Talent Registry Africa is a professional discovery and reputation platform for African digital talent—including technical writers, UI/UX and product designers, content strategists, software engineers, and technical leaders. The platform enables professionals to build a shareable Professional Passport showcasing their work history, deliverables, portfolio links, and skills without requiring third-party employment verification.
 
 ## What It Does
 
-- Professional Passports: Provides each technical professional with a dedicated, shareable passport URL highlighting their profile headline, location, availability, work history, projects, competencies, and client reviews.
-- Direct Work History: Users can directly add, update, and manage their career history, including company or client name, job title, description, start and end dates, skills used, and optional links to live projects or portfolios.
+- Professional Passports: Provides each digital professional with a dedicated, shareable passport URL highlighting their profile headline, location, availability, work history, deliverables, competencies, and client reviews.
+- Direct Work History: Users can directly add, update, and manage their career history, including company or client name, job title, description, start and end dates, skills used, and optional links to live projects, articles, design files, or portfolios.
 - Activity-Based Reputation System: Calculates a dynamic reputation score (0 to 100) based on platform engagement, profile completeness, completed client engagements, and authentic client ratings and reviews.
-- Talent Discovery: Enables employers, recruiters, and engineering leaders to filter and discover talent across African technology hubs by specialization, primary stack, location, and reputation score.
+- Talent Discovery: Enables employers, recruiters, and team leads to filter and discover talent across African hubs by specialization (writing, design, engineering, product, marketing), primary skills, location, and reputation score.
 - Client Endorsements: Allows clients and colleagues to leave structured feedback, ratings, and competency assessments upon completed engagements.
 - Direct Inquiries: Facilitates direct communication between hiring teams and candidates with structured engagement types, budget ranges, and project scopes.
-- Organization Profiles: Displays company profiles and associated engineers and technical alumni.
+- Organization Profiles: Displays company profiles and associated digital professionals and alumni.
 - Administrative Governance: Includes an administrative control center for user management, dispute resolution, and audit logging.
 
 ## Tech Stack
@@ -75,7 +75,7 @@ Optional configurations:
 
 ### 4. Seed Database (Optional)
 
-To populate the database with sample technical talent profiles, organizations, work histories, and reviews:
+To populate the database with sample digital talent profiles (writers, designers, engineers), organizations, work histories, and reviews:
 
 ```bash
 npm run seed

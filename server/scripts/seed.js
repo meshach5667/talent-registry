@@ -631,6 +631,181 @@ async function seedDatabase() {
 
     await updateReputationScore(userAmina._id);
 
+    // Professional 7: Ngozi Eze (Nigeria, Technical Writer & Content Strategist)
+    const userNgozi = await User.create({
+      name: "Ngozi Eze",
+      email: "ngozi.eze@talentregistry.africa",
+      password: "password123",
+      role: "professional",
+      country: "Nigeria",
+      city: "Lagos",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80",
+      status: "active",
+    });
+
+    await Profile.create({
+      user: userNgozi._id,
+      passportSlug: "ngozi-eze",
+      headline: "Senior Technical Writer & Content Strategist | Developer Documentation & API Guides",
+      profession: "Technical Writer & Content Strategist",
+      yearsOfExperience: 6,
+      country: "Nigeria",
+      city: "Lagos",
+      bio: "Technical writer and documentation architect with 6+ years designing developer documentation portals, API references, tutorials, and technical content strategies for fintech and SaaS platforms across Africa.",
+      skills: [
+        { name: "Technical Writing", category: "Writing" },
+        { name: "API Documentation", category: "Documentation" },
+        { name: "Content Strategy", category: "Strategy" },
+        { name: "Markdown & Docs-as-Code", category: "Tooling" },
+        { name: "Developer Experience (DX)", category: "Product" },
+      ],
+      socialLinks: {
+        github: "https://github.com",
+        linkedin: "https://linkedin.com",
+        portfolio: "https://ngozieze.writings.dev",
+      },
+      availability: {
+        status: "available",
+        hourlyRate: 65,
+        currency: "USD",
+        remoteOnly: true,
+      },
+      passportViews: 110,
+    });
+
+    const ngoziExp1 = await Experience.create({
+      user: userNgozi._id,
+      title: "Lead Technical Writer",
+      company: "Paystack",
+      organization: orgPaystack._id,
+      location: "Lagos / Remote",
+      locationType: "remote",
+      employmentType: "full-time",
+      startDate: new Date("2021-09-01"),
+      isCurrent: true,
+      description: "Spearheaded complete developer documentation overhaul, API integration quickstarts, and webhook reference guides used by 100,000+ developers.",
+      skillsUsed: ["Technical Writing", "API Documentation", "Markdown", "Postman"],
+      projectUrl: "https://paystack.com/docs",
+      link: "https://paystack.com/docs",
+    });
+
+    await Project.create({
+      user: userNgozi._id,
+      title: "Interactive API Documentation & SDK Quickstart Hub",
+      description: "Designed and authored comprehensive interactive API reference, reducing developer onboarding time from 3 days to under 45 minutes.",
+      role: "Lead Technical Writer & Content Strategist",
+      clientOrCompany: "Paystack",
+      organization: orgPaystack._id,
+      projectUrl: "https://paystack.com/docs/api",
+      technologies: ["OpenAPI", "Markdown", "Swagger", "Postman"],
+      startDate: new Date("2022-04-01"),
+      endDate: new Date("2023-01-15"),
+      metrics: "Over 120,000 monthly active developers, 45% reduction in integration support inquiries.",
+    });
+
+    await Feedback.create({
+      professional: userNgozi._id,
+      author: employerTunde._id,
+      organization: orgPaystack._id,
+      experience: ngoziExp1._id,
+      rating: 5,
+      technicalCompetence: 5,
+      communication: 5,
+      reliability: 5,
+      review: "Ngozi bridged the gap between our core infrastructure and external developers brilliantly. Her documentation is clear, accurate, and loved by integration partners.",
+      relationship: "Direct Manager",
+      isVerifiedEmployer: true,
+    });
+
+    await updateReputationScore(userNgozi._id);
+
+    // Professional 8: Farida Omar (Kenya, UI/UX & Product Designer)
+    const userFarida = await User.create({
+      name: "Farida Omar",
+      email: "farida.omar@talentregistry.africa",
+      password: "password123",
+      role: "professional",
+      country: "Kenya",
+      city: "Nairobi",
+      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&auto=format&fit=crop&q=80",
+      status: "active",
+    });
+
+    await Profile.create({
+      user: userFarida._id,
+      passportSlug: "farida-omar",
+      headline: "Lead UI/UX & Product Designer | Fintech, Design Systems & Inclusive UX",
+      profession: "UI/UX & Product Designer",
+      yearsOfExperience: 5,
+      country: "Kenya",
+      city: "Nairobi",
+      bio: "Human-centered digital product designer specializing in accessible mobile money experiences, design systems, and user research across East Africa.",
+      skills: [
+        { name: "UI/UX Design", category: "Design" },
+        { name: "Figma & Prototyping", category: "Tooling" },
+        { name: "Design Systems", category: "Design" },
+        { name: "User Research & Usability Testing", category: "Research" },
+        { name: "Interaction Design", category: "Design" },
+      ],
+      socialLinks: {
+        linkedin: "https://linkedin.com",
+        portfolio: "https://faridaomar.design",
+      },
+      availability: {
+        status: "open_to_offers",
+        hourlyRate: 70,
+        currency: "USD",
+        remoteOnly: true,
+      },
+      passportViews: 135,
+    });
+
+    const faridaExp1 = await Experience.create({
+      user: userFarida._id,
+      title: "Senior Product Designer",
+      company: "Safaricom PLC",
+      organization: orgSafaricom._id,
+      location: "Nairobi, Kenya",
+      locationType: "hybrid",
+      employmentType: "full-time",
+      startDate: new Date("2021-04-01"),
+      isCurrent: true,
+      description: "Led end-to-end UX architecture and design system for next-generation mobile merchant and remittance applications.",
+      skillsUsed: ["Figma", "UI/UX Design", "User Research", "Prototyping"],
+      projectUrl: "https://safaricom.co.ke",
+      link: "https://safaricom.co.ke",
+    });
+
+    await Project.create({
+      user: userFarida._id,
+      title: "Mobile Merchant Checkout & Payment Flow Redesign",
+      description: "Redesigned merchant payment flow and onboarding flow based on field research with 45 local business owners across Nairobi and Mombasa.",
+      role: "Lead Product Designer",
+      clientOrCompany: "Safaricom PLC",
+      organization: orgSafaricom._id,
+      projectUrl: "https://faridaomar.design/m-pesa-merchant",
+      technologies: ["Figma", "FigJam", "Miro", "Protopie"],
+      startDate: new Date("2022-06-01"),
+      endDate: new Date("2023-02-28"),
+      metrics: "Increased merchant activation rate from 52% to 86%, reduced transaction abandonment by 33%.",
+    });
+
+    await Feedback.create({
+      professional: userFarida._id,
+      author: employerSarah._id,
+      organization: orgSafaricom._id,
+      experience: faridaExp1._id,
+      rating: 5,
+      technicalCompetence: 5,
+      communication: 5,
+      reliability: 5,
+      review: "Farida has exceptional design instincts and empathy for diverse user demographics. Her merchant redesign significantly improved user adoption.",
+      relationship: "Direct Manager",
+      isVerifiedEmployer: true,
+    });
+
+    await updateReputationScore(userFarida._id);
+
     // 5. Create sample Audit Logs
     await AuditLog.create({
       user: adminUser._id,

@@ -19,9 +19,9 @@ export function Footer() {
               “Don’t just claim your experience. Prove it.”
             </p>
             <p className="text-neutral-500 text-[11px] leading-relaxed">
-              Professional talent registry bridging African technical
-              excellence with global opportunities through showcase portfolios,
-              work history, and client endorsements.
+              Professional talent registry bridging African digital
+              excellence—writers, designers, engineers, and creatives—with global
+              opportunities through direct portfolios, work history, and client endorsements.
             </p>
           </div>
 

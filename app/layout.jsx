@@ -25,7 +25,7 @@ export const viewport = {
 export const metadata = {
   title: "Talent Registry | Don't just claim your experience. Prove it.",
   description:
-    "The verified professional discovery network for African engineers, architects, and technical leaders.",
+    "The professional discovery and reputation network for African writers, designers, engineers, and digital talents.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

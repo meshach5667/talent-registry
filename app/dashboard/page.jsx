@@ -770,10 +770,10 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-base font-bold text-neutral-900">
-                  Key Technical Projects
+                  Key Deliverables & Projects
                 </h2>
                 <p className="text-xs text-neutral-500">
-                  Document production deliverables, metrics, and architecture.
+                  Document deliverables, articles, design prototypes, campaigns, and systems.
                 </p>
               </div>
               <Button size="sm" onClick={() => setIsAddProjOpen(true)}>
@@ -840,7 +840,7 @@ export default function DashboardPage() {
                             className="inline-flex items-center gap-1 text-xs text-neutral-700 hover:text-emerald-700 underline"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
-                            <span>Live Project</span>
+                            <span>Live Deliverable / Project</span>
                           </a>
                         </div>
                       )}
@@ -1040,7 +1040,7 @@ export default function DashboardPage() {
                   type="text"
                   value={skillsStr}
                   onChange={(e) => setSkillsStr(e.target.value)}
-                  placeholder="Go, Kubernetes, React, Python, PostgreSQL"
+                  placeholder="Technical Writing, Figma, React, Content Strategy, Python, Go..."
                   className="w-full px-3 py-2 border border-neutral-300 rounded-md"
                 />
               </div>
@@ -1220,7 +1220,7 @@ export default function DashboardPage() {
               type="url"
               value={expLink}
               onChange={(e) => setExpLink(e.target.value)}
-              placeholder="https://github.com/... or https://yourproject.com"
+              placeholder="https://... (GitHub, Figma, Substack, Medium, or Live Site)"
               className="w-full px-3 py-2 border border-neutral-300 rounded-md"
             />
           </div>
@@ -1372,7 +1372,7 @@ export default function DashboardPage() {
               type="url"
               value={expLink}
               onChange={(e) => setExpLink(e.target.value)}
-              placeholder="https://github.com/... or https://yourproject.com"
+              placeholder="https://... (GitHub, Figma, Substack, Medium, or Live Site)"
               className="w-full px-3 py-2 border border-neutral-300 rounded-md"
             />
           </div>
@@ -1397,20 +1397,20 @@ export default function DashboardPage() {
       <Modal
         isOpen={isAddProjOpen}
         onClose={() => setIsAddProjOpen(false)}
-        title="Add Technical Project"
-        description="Showcase an architectural deliverable or open-source contribution."
+        title="Add Project or Deliverable"
+        description="Showcase a key project, published article, design case study, or client deliverable."
       >
         <form onSubmit={handleAddProject} className="space-y-3 text-xs">
           <div>
             <label className="block font-semibold text-neutral-800 mb-1">
-              Project Title
+              Title
             </label>
             <input
               type="text"
               required
               value={projTitle}
               onChange={(e) => setProjTitle(e.target.value)}
-              placeholder="e.g. Sub-Second Multi-Currency Settlement Engine"
+              placeholder="e.g. Design System V2, Developer Docs Portal, or Settlement Engine"
               className="w-full px-3 py-2 border border-neutral-300 rounded-md"
             />
           </div>
@@ -1425,7 +1425,7 @@ export default function DashboardPage() {
                 required
                 value={projRole}
                 onChange={(e) => setProjRole(e.target.value)}
-                placeholder="e.g. Lead Architect"
+                placeholder="e.g. Technical Writer, Lead Designer, or Architect"
                 className="w-full px-3 py-2 border border-neutral-300 rounded-md"
               />
             </div>
@@ -1451,47 +1451,47 @@ export default function DashboardPage() {
               type="text"
               value={projMetrics}
               onChange={(e) => setProjMetrics(e.target.value)}
-              placeholder="e.g. Reconciles 2.4M transactions daily with 99.99% uptime"
+              placeholder="e.g. Grew doc readership by 300% or processed 2M+ transactions"
               className="w-full px-3 py-2 border border-neutral-300 rounded-md"
             />
           </div>
 
           <div>
             <label className="block font-semibold text-neutral-800 mb-1">
-              Project Description
+              Description
             </label>
             <textarea
               required
               rows={3}
               value={projDescription}
               onChange={(e) => setProjDescription(e.target.value)}
-              placeholder="Explain system architecture and business impact..."
+              placeholder="Explain the background, methodology, and tangible results..."
               className="w-full px-3 py-2 border border-neutral-300 rounded-md"
             />
           </div>
 
           <div>
             <label className="block font-semibold text-neutral-800 mb-1">
-              Technologies (comma separated)
+              Tools & Technologies (comma separated)
             </label>
             <input
               type="text"
               value={projTechnologies}
               onChange={(e) => setProjTechnologies(e.target.value)}
-              placeholder="Go, Kafka, Redis, Docker"
+              placeholder="Figma, Markdown, Notion, React, Python, Go..."
               className="w-full px-3 py-2 border border-neutral-300 rounded-md"
             />
           </div>
 
           <div>
             <label className="block font-semibold text-neutral-800 mb-1">
-              Live Project URL (Optional)
+              Live URL / Deliverable Link (Optional)
             </label>
             <input
               type="url"
               value={projUrl}
               onChange={(e) => setProjUrl(e.target.value)}
-              placeholder="https://myproject.com"
+              placeholder="https://..."
               className="w-full px-3 py-2 border border-neutral-300 rounded-md"
             />
           </div>

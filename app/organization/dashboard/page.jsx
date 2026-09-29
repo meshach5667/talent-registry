@@ -267,7 +267,7 @@ export default function OrganizationDashboardPage() {
 
           {teamMembers.length === 0 ? (
             <p className="text-xs text-neutral-500 py-6 text-center">
-              No engineers have recorded work history with this organization yet.
+              No professionals have recorded work history with this organization yet.
             </p>
           ) : (
             <div className="divide-y divide-neutral-100 text-xs">

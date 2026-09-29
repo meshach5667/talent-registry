@@ -579,10 +579,10 @@ export default function ProfessionalPassportPage() {
           <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
             <div>
               <h2 className="text-lg font-bold text-neutral-900 tracking-tight">
-                Key Technical Deliverables & Projects
+                Key Deliverables, Projects & Case Studies
               </h2>
               <p className="text-xs text-neutral-500">
-                Production systems, client work, and key accomplishments
+                Articles, design case studies, production systems, and measurable outcomes
               </p>
             </div>
           </div>
@@ -641,7 +641,7 @@ export default function ProfessionalPassportPage() {
                         className="inline-flex items-center gap-1.5 text-xs text-emerald-700 hover:text-emerald-900 font-medium hover:underline"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        <span>View Project</span>
+                        <span>View Deliverable / Project</span>
                       </a>
                     </div>
                   )}

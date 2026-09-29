@@ -66,26 +66,33 @@ function TalentSearchContent() {
 
   const professions = [
     "All",
+    "Technical Writer & Content Strategist",
+    "UI/UX & Product Designer",
+    "Product Manager",
+    "Digital Marketer & SEO Specialist",
+    "Data Analyst & Analytics",
     "Software Engineer",
-    "Distributed Systems Engineer",
+    "Full Stack Engineer",
     "Frontend Engineer",
     "DevOps & Cloud Architect",
     "Machine Learning Engineer",
     "Security Engineer",
-    "Full Stack Engineer",
   ];
 
   const popularSkills = [
     "All",
-    "Go",
-    "Kubernetes",
+    "Technical Writing",
+    "UI/UX Design",
+    "Product Management",
+    "Figma",
+    "Content Strategy",
+    "SEO & Marketing",
     "React",
     "TypeScript",
     "Python",
-    "AWS",
-    "Kafka",
-    "PostgreSQL",
-    "Terraform",
+    "Go",
+    "Kubernetes",
+    "Data Analysis",
   ];
 
   const fetchProfiles = async () => {
@@ -183,10 +190,10 @@ function TalentSearchContent() {
               Professional Discovery Network
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight">
-              African Technical Talent Registry
+              African Digital Talent Registry
             </h1>
             <p className="text-xs text-neutral-600 mt-1">
-              Search and filter candidates by technical stack, experience, client ratings, and platform reputation.
+              Search and filter writers, designers, product managers, engineers, and digital talents by specialization, deliverables, and authentic reputation.
             </p>
           </div>
 
@@ -204,7 +211,7 @@ function TalentSearchContent() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by keywords, technical stack, or candidate name..."
+                placeholder="Search by keywords, skills (e.g. Technical Writing, Figma, React), or candidate name..."
                 className="w-full text-xs pl-9 pr-3 py-2.5 border border-neutral-300 rounded-md focus:outline-none focus:ring-1 focus:ring-neutral-900"
               />
             </div>
