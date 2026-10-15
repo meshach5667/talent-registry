@@ -1,4 +1,4 @@
-# Talent Registry Africa
+# Talent Registry 
 
 Talent Registry Africa is a professional discovery and reputation platform for African digital talent—including technical writers, UI/UX and product designers, content strategists, software engineers, and technical leaders. The platform enables professionals to build a shareable Professional Passport showcasing their work history, deliverables, portfolio links, and skills without requiring third-party employment verification.
 
